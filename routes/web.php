@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminEventController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\EventController as AdminEventControllerCRUD; // alias biar tidak bentrok
+use App\Http\Controllers\PartnerController;
 
 // Home
 Route::get('/', [HomeController::class, 'index']);
@@ -41,3 +42,11 @@ Route::prefix('admin')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('events', AdminEventControllerCRUD::class);
 });
+
+// Admin Partner
+Route::get('/admin/partners', [PartnerController::class, 'index']);
+Route::post('/admin/partners', [PartnerController::class, 'store']);
+Route::get('/admin/partners/{id}/edit', [PartnerController::class, 'edit']);
+Route::put('/admin/partners/{id}', [PartnerController::class, 'update']);
+Route::delete('/admin/partners/{id}', [PartnerController::class, 'destroy']);
+Route::get('/admin/partners/create', [PartnerController::class, 'create']);
