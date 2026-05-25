@@ -1,118 +1,141 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-10 px-6">
+<h1 class="text-2xl font-bold mb-6">Manajemen Partner</h1>
 
-    <div class="max-w-6xl mx-auto">
+<!-- SEARCH & ACTION BAR -->
+<div class="mb-6">
+    <form action="/admin/partners" method="GET" class="flex flex-col md:flex-row gap-3 md:items-center">
 
-        <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+        <!-- Input Search -->
+        <input 
+            type="text"
+            name="search"
+            placeholder="Cari partner..."
+            class="w-full md:flex-1 border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 p-2.5 rounded-lg outline-none transition"
+        >
 
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-indigo-600 to-blue-500 px-8 py-6 flex justify-between items-center">
+        <!-- Button Search -->
+        <button 
+            type="submit"
+            class="px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition"
+        >
+            Search
+        </button>
 
-                <div>
-                    <h1 class="text-3xl font-bold text-white">
-                        Data Partner
-                    </h1>
+        <!-- Button Tambah -->
+        <a 
+            href="/admin/partners/create"
+            class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-center transition"
+        >
+            + Tambah Partner
+        </a>
 
-                    <p class="text-blue-100 mt-1">
-                        Kelola seluruh data partner dengan mudah
-                    </p>
-                </div>
+    </form>
+</div>
 
-                <a href="/admin/partners/create"
-                   class="bg-white text-indigo-600 px-5 py-3 rounded-xl font-semibold shadow hover:bg-gray-100 transition duration-300">
+<!-- TABEL -->
+<div class="bg-white rounded-xl shadow overflow-hidden">
 
-                    + Tambah Partner
+    <table class="w-full text-left">
 
-                </a>
+        <thead class="bg-gray-100">
 
-            </div>
+            <tr>
+                <th class="p-4">ID</th>
+                <th class="p-4">Nama Partner</th>
+                <th class="p-4">Logo</th>
+                <th class="p-4">Created At</th>
+                <th class="p-4">Updated At</th>
+                <th class="p-4">Aksi</th>
+            </tr>
 
-            <!-- Table -->
-            <div class="p-8 overflow-x-auto">
+        </thead>
 
-                <table class="w-full border-collapse">
+        <tbody>
 
-                    <thead>
+            @forelse($partners as $partner)
 
-                        <tr class="bg-gray-100 text-left text-gray-700">
+            <tr class="border-t hover:bg-gray-50 transition">
 
-                            <th class="p-4 font-semibold">No</th>
-                            <th class="p-4 font-semibold">Nama</th>
-                            <th class="p-4 font-semibold">Logo</th>
-                            <th class="p-4 font-semibold text-center">Aksi</th>
+                <!-- ID -->
+                <td class="p-4">
+                    {{ $partner->id }}
+                </td>
 
-                        </tr>
+                <!-- NAMA -->
+                <td class="p-4">
+                    {{ $partner->name }}
+                </td>
 
-                    </thead>
+                <!-- LOGO -->
+                <td class="p-4">
+                    <img src="{{ $partner->logo_url }}" 
+                    alt="{{ $partner->name }}"
+                     class="h-16 w-24 object-contain">
+                </td>
 
-                    <tbody>
+                <!-- CREATED -->
+                <td class="p-4">
+                    {{ $partner->created_at }}
+                </td>
 
-                        @foreach($partners as $partner)
+                <!-- UPDATED -->
+                <td class="p-4">
+                    {{ $partner->updated_at }}
+                </td>
 
-                        <tr class="border-b hover:bg-gray-50 transition">
+                <!-- AKSI -->
+                <td class="p-4">
 
-                            <td class="p-4">
-                                {{ $loop->iteration }}
-                            </td>
+                    <div class="flex gap-2 items-center">
 
-                            <td class="p-4 font-medium text-gray-800">
-                                {{ $partner->name }}
-                            </td>
+                        <!-- EDIT -->
+                        <a 
+                            href="/admin/partners/{{ $partner->id }}/edit"
+                            class="text-blue-500 hover:underline"
+                        >
+                            Edit
+                        </a>
 
-                            <td class="p-4">
+                        <!-- DELETE -->
+                        <form 
+                            action="/admin/partners/{{ $partner->id }}" 
+                            method="POST"
+                        >
+                            @csrf
+                            @method('DELETE')
 
-                                <img src="{{ asset('assets/concert.png') }}"
-                                     class="w-20 h-20 rounded-lg object-cover shadow">
+                            <button 
+                                type="submit"
+                                class="text-red-500 hover:underline"
+                                onclick="return confirm('Yakin ingin menghapus data ini?')"
+                            >
+                                Hapus
+                            </button>
 
-                            </td>
+                        </form>
 
-                            <td class="p-4">
+                    </div>
 
-                                <div class="flex justify-center gap-3">
+                </td>
 
-                                    <a href="/admin/partners/{{ $partner->id }}/edit"
-                                       class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg shadow transition">
+            </tr>
 
-                                        Edit
+            @empty
 
-                                    </a>
+            <tr>
+                <td colspan="6" class="text-center p-6 text-gray-500">
+                    Data partner belum tersedia
+                </td>
+            </tr>
 
-                                    <form action="/admin/partners/{{ $partner->id }}"
-                                          method="POST">
+            @endforelse
 
-                                        @csrf
-                                        @method('DELETE')
+        </tbody>
 
-                                        <button type="submit"
-                                                onclick="return confirm('Yakin ingin menghapus data ini?')"
-                                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow transition">
-
-                                            Hapus
-
-                                        </button>
-
-                                    </form>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
+    </table>
 
 </div>
 

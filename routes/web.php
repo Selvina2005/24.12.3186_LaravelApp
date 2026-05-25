@@ -33,9 +33,17 @@ Route::get('/ticket', [EventController::class, 'ticket']);
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
-
     Route::get('/transactions', [AdminEventController::class, 'transactions']);
-    Route::get('/categories', [CategoryController::class, 'index']); 
+ 
+    // CATEGORY CRUD
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/create', [CategoryController::class, 'create']);
+    Route::post('/categories', [CategoryController::class, 'store']);
+
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit']);
+    Route::put('/categories/{id}', [CategoryController::class, 'update']);
+
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 });
 
 // Admin Event (CRUD)
@@ -44,9 +52,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // Admin Partner
-Route::get('/admin/partners', [PartnerController::class, 'index']);
-Route::post('/admin/partners', [PartnerController::class, 'store']);
-Route::get('/admin/partners/{id}/edit', [PartnerController::class, 'edit']);
-Route::put('/admin/partners/{id}', [PartnerController::class, 'update']);
-Route::delete('/admin/partners/{id}', [PartnerController::class, 'destroy']);
-Route::get('/admin/partners/create', [PartnerController::class, 'create']);
+Route::prefix('admin')->group(function () {
+    Route::resource('partners', PartnerController::class);
+});

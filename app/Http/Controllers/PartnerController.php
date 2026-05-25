@@ -7,11 +7,20 @@ use App\Models\Partner;
 
 class PartnerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $partners = Partner::all();
+        $search = $request->search;
+
+        $partners = Partner::when($search, function ($query, $search) {
+            return $query->where('name', 'like', '%' . $search . '%');
+        })->get();
 
         return view('admin.partners.index', compact('partners'));
+    }
+
+    public function create()
+    {
+        return view('admin.partners.create');
     }
 
     public function store(Request $request)
@@ -25,35 +34,34 @@ class PartnerController extends Controller
     }
 
     public function edit($id)
-{
-    $partner = Partner::findOrFail($id);
+    {
+        $partner = Partner::findOrFail($id);
 
-    return view('admin.partners.edit', compact('partner'));
-}
+        return view('admin.partners.edit', compact('partner'));
+    }
 
-public function update(Request $request, $id)
-{
-    $partner = Partner::findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|min:3',
+            'logo_url' => 'nullable|url'
+        ]);
 
-    $partner->update([
-        'name' => $request->name,
-        'logo_url' => $request->logo_url,
-    ]);
+        $partner = Partner::findOrFail($id);
 
-    return redirect('/admin/partners');
-}
+        $partner->update([
+            'name' => $request->name,
+            'logo_url' => $request->logo_url,
+        ]);
 
-public function destroy($id)
-{
-    $partner = Partner::findOrFail($id);
+        return redirect('/admin/partners')->with('success', 'Partner berhasil diupdate');
+    }
 
-    $partner->delete();
+    public function destroy($id)
+    {
+        $partner = Partner::findOrFail($id);
+        $partner->delete();
 
-    return redirect('/admin/partners');
-}
-
-public function create()
-{
-    return view('admin.partners.form');
-}
+        return redirect('/admin/partners')->with('success', 'Partner berhasil dihapus');
+    }
 }

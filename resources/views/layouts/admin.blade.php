@@ -45,12 +45,23 @@
             </a>
 
                 <a href="{{ url('/admin/partners') }}"
-    class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-800 rounded-xl font-bold transition">
-    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"></path>
+   class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-800 rounded-xl font-bold transition">
+
+    <svg class="w-5 h-5 text-indigo-300"
+         fill="none"
+         stroke="currentColor"
+         viewBox="0 0 24 24">
+
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 21h18M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14M9 9h1m-1 4h1m4-4h1m-1 4h1">
+        </path>
+
     </svg>
-    Partners
+
+    <span>Partners</span>
+
 </a>
 
             <!-- Laporan Transaksi -->
