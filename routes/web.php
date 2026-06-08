@@ -3,13 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminEventController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\EventController as AdminEventControllerCRUD; // alias biar tidak bentrok
+use App\Http\Controllers\Admin\EventController as AdminEventControllerCRUD;
 use App\Http\Controllers\PartnerController;
 
-// Home
+// ======================
+// PUBLIC
+// ======================
+
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/profil', function () {
@@ -24,34 +28,79 @@ Route::get('/bantuan', function () {
     return view('bantuan');
 });
 
-// Event (PUBLIC)
+// Event Public
 Route::get('/event/1', [EventController::class, 'show']);
 Route::get('/checkout', [EventController::class, 'checkout']);
 Route::get('/ticket', [EventController::class, 'ticket']);
 
-// Admin
-Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
 
-    Route::get('/transactions', [AdminEventController::class, 'transactions']);
- 
-    // CATEGORY CRUD
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/create', [CategoryController::class, 'create']);
-    Route::post('/categories', [CategoryController::class, 'store']);
+// ======================
+// AUTH ADMIN
+// ======================
 
-    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit']);
-    Route::put('/categories/{id}', [CategoryController::class, 'update']);
-
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
-});
-
-// Admin Event (CRUD)
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('events', AdminEventControllerCRUD::class);
+
+    Route::get('/login', [AuthController::class, 'showLogin'])
+        ->middleware('guest')
+        ->name('login');
+
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login.post');
+
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->name('logout');
 });
 
-// Admin Partner
-Route::prefix('admin')->group(function () {
-    Route::resource('partners', PartnerController::class);
+
+// ======================
+// ADMIN AREA
+// ======================
+
+Route::prefix('admin')
+    ->middleware(['auth', 'admin'])
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('admin.dashboard');
+
+        // Transactions
+        Route::get('/transactions', [AdminEventController::class, 'transactions']);
+
+        // Category CRUD
+        Route::get('/categories', [CategoryController::class, 'index']);
+        Route::get('/categories/create', [CategoryController::class, 'create']);
+        Route::post('/categories', [CategoryController::class, 'store']);
+
+        Route::get('/categories/{id}/edit', [CategoryController::class, 'edit']);
+        Route::put('/categories/{id}', [CategoryController::class, 'update']);
+
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+});
+
+
+// ======================
+// EVENT CRUD
+// ======================
+
+Route::prefix('admin')
+    ->middleware(['auth', 'admin'])
+    ->name('admin.')
+    ->group(function () {
+
+        Route::resource('events', AdminEventControllerCRUD::class);
+
+});
+
+
+// ======================
+// PARTNER CRUD
+// ======================
+
+Route::prefix('admin')
+    ->middleware(['auth', 'admin'])
+    ->group(function () {
+
+        Route::resource('partners', PartnerController::class);
+
 });
