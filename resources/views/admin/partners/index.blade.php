@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@php
+use Illuminate\Support\Str;
+@endphp
 @section('content')
 
 <h1 class="text-2xl font-bold mb-6">Manajemen Partner</h1>
@@ -71,9 +73,20 @@
 
                 <!-- LOGO -->
                 <td class="p-4">
-                    <img src="{{ $partner->logo_url }}" 
-                    alt="{{ $partner->name }}"
-                     class="h-16 w-24 object-contain">
+
+                    @if($partner->logo_url)
+
+                        <img
+                            src="{{ asset('storage/' . $partner->logo_url) }}"
+                            alt="{{ $partner->name }}"
+                            class="h-16 w-24 object-contain">
+
+                    @else
+
+                        <span class="text-gray-400">Tidak ada logo</span>
+
+                    @endif
+
                 </td>
 
                 <!-- CREATED -->

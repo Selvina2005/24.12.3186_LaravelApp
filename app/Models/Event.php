@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
@@ -11,11 +11,10 @@ class Event extends Model
     'location', 'price', 'stock', 'poster_path'
     ];
 
-    public function category()
+  public function category()
     {
-        return $this->belongsTo(\App\Models\Category::class);
+        return $this->belongsTo(Category::class);
     }
-
 }
 
 

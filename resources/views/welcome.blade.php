@@ -1,4 +1,9 @@
 @extends('layouts.app')
+
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
 
     <!-- Hero Section -->
@@ -91,11 +96,10 @@
 
                 <!-- LOGO -->
                 <div class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center overflow-hidden mb-4">
-                    <img 
-                        src="{{ $partner->logo_url ? asset($partner->logo_url) : asset('assets/concert.png') }}"
+                    <img
+                        src="{{ asset('storage/'.$partner->logo_url) }}"
                         alt="{{ $partner->name }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    >
+                        class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500">
                 </div>
 
                 <!-- NAME -->
@@ -163,16 +167,11 @@
                 <!-- Poster Event -->
                 <div class="relative overflow-hidden aspect-[3/4] bg-slate-100">
 
-                    <img 
-                        src="{{ $event->image 
-                            ? (Str::startsWith($event->image, 'http') 
-                                ? $event->image 
-                                : asset('storage/' . $event->image)) 
-                            : asset('assets/concert.png') }}"
+                    <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
+                        ? asset('storage/' . $event->poster_path)
+                        : 'https://placehold.co/600x400' }}"
                         alt="{{ $event->title }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <!-- Badge Category -->
                     <div
                         class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur rounded-lg text-xs font-bold uppercase text-indigo-600">
@@ -208,7 +207,7 @@
                             Rp {{ number_format($event->price, 0, ',', '.') }}
                         </span>
 
-                        <a href="{{ url('event/' . $event->id) }}"
+                        <a href="{{ route('events.show', $event->id) }}"
                             class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition">
                             Lihat Detail
                         </a>

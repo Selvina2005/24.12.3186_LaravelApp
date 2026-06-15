@@ -25,12 +25,19 @@ class PartnerController extends Controller
 
     public function store(Request $request)
     {
+        $logoPath = null;
+
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('partners', 'public');
+        }
+
         Partner::create([
             'name' => $request->name,
-            'logo_url' => $request->logo_url,
+            'logo_url' => $logoPath,
         ]);
 
-        return redirect('/admin/partners');
+        return redirect('/admin/partners')
+            ->with('success', 'Partner berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -40,21 +47,26 @@ class PartnerController extends Controller
         return view('admin.partners.edit', compact('partner'));
     }
 
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|min:3',
-            'logo_url' => 'nullable|url'
         ]);
 
         $partner = Partner::findOrFail($id);
 
-        $partner->update([
+        $data = [
             'name' => $request->name,
-            'logo_url' => $request->logo_url,
-        ]);
+        ];
 
-        return redirect('/admin/partners')->with('success', 'Partner berhasil diupdate');
+        if ($request->hasFile('logo')) {
+            $data['logo_url'] = $request->file('logo')->store('partners', 'public');
+        }
+
+        $partner->update($data);
+
+        return redirect('/admin/partners')
+            ->with('success', 'Partner berhasil diupdate');
     }
 
     public function destroy($id)

@@ -29,7 +29,9 @@ Route::get('/bantuan', function () {
 });
 
 // Event Public
-Route::get('/event/1', [EventController::class, 'show']);
+Route::get('/events/{event}', [EventController::class, 'show'])
+    ->name('events.show');
+    
 Route::get('/checkout', [EventController::class, 'checkout']);
 Route::get('/ticket', [EventController::class, 'ticket']);
 

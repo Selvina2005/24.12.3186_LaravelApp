@@ -7,9 +7,8 @@
     <div class="bg-white p-6 rounded-xl shadow max-w-2xl w-full">
 
         <h1 class="text-2xl font-bold mb-6">Tambah Partner</h1>
-
-        <form action="/admin/partners" method="POST" class="space-y-5">
-            @csrf
+    <form action="/admin/partners" method="POST" enctype="multipart/form-data" class="space-y-5">
+    @csrf
 
             <div>
                 <label class="block mb-2 font-medium text-gray-700">
@@ -25,13 +24,14 @@
 
             <div>
                 <label class="block mb-2 font-medium text-gray-700">
-                    Logo URL
+                    Logo Partner
                 </label>
 
                 <input 
-                    type="text" 
-                    name="logo_url"
-                    class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 outline-none"
+                    type="file" 
+                    name="logo"
+                    accept="image/*"
+                    class="w-full border border-gray-300 rounded-lg p-3"
                 >
             </div>
 

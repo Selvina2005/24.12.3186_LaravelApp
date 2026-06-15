@@ -12,8 +12,8 @@
         </h1>
 
         <!-- FORM -->
-        <form action="/admin/partners/{{ $partner->id }}" method="POST" class="space-y-5">
-            @csrf
+        <form action="/admin/partners/{{ $partner->id }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+             @csrf
             @method('PUT')
 
             <!-- NAMA PARTNER -->
@@ -32,25 +32,23 @@
                 >
             </div>
 
-            <!-- LOGO URL -->
+           <!-- LOGO PARTNER -->
             <div>
                 <label class="block mb-2 font-medium text-gray-700">
-                    Logo URL
+                    Logo Partner
                 </label>
 
-                <input 
-                    type="text"
-                    name="logo_url"
-                    value="{{ $partner->logo_url }}"
-                    placeholder="assets/logo/concert.png"
+                <input
+                    type="file"
+                    name="logo"
+                    accept="image/*"
                     class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 outline-none transition"
                 >
 
-                <!-- PREVIEW LOGO -->
                 @if($partner->logo_url)
                     <div class="mt-4">
-                        <img 
-                            src="{{ asset($partner->logo_url) }}"
+                        <img
+                            src="{{ asset('storage/'.$partner->logo_url) }}"
                             alt="{{ $partner->name }}"
                             class="h-20 w-32 object-contain border rounded-lg p-2 bg-gray-50"
                         >
