@@ -3,12 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminEventController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\EventController as AdminEventControllerCRUD;
-use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\Admin\TransactionController;
 
 // ======================
 // PUBLIC
@@ -31,9 +33,18 @@ Route::get('/bantuan', function () {
 // Event Public
 Route::get('/events/{event}', [EventController::class, 'show'])
     ->name('events.show');
-    
-Route::get('/checkout', [EventController::class, 'checkout']);
+
 Route::get('/ticket', [EventController::class, 'ticket']);
+
+// ======================
+// CHECKOUT
+// ======================
+
+Route::get('/checkout/{event}', [CheckoutController::class, 'create'])
+    ->name('checkout.create');
+
+Route::post('/checkout/{event}', [CheckoutController::class, 'store'])
+    ->name('checkout.store');
 
 
 // ======================
@@ -67,7 +78,8 @@ Route::prefix('admin')
             ->name('admin.dashboard');
 
         // Transactions
-        Route::get('/transactions', [AdminEventController::class, 'transactions']);
+        Route::get('/transactions', [TransactionController::class, 'index'])
+            ->name('transactions.index');
 
         // Category CRUD
         Route::get('/categories', [CategoryController::class, 'index']);
