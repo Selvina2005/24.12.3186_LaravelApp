@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\TransactionController;
 // PUBLIC
 // ======================
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/profil', function () {
     return view('profil');
@@ -68,6 +68,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // ======================
 // ADMIN AREA
 // ======================
+Route::get('/payment/{order_id}', [\App\Http\Controllers\CheckoutController::class, 'payment'])->name('checkout.payment');
+Route::get('/success/{order_id}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
 
 Route::prefix('admin')
     ->middleware(['auth', 'admin'])
