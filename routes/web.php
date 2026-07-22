@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\GoogleController;
 
 //Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -43,3 +44,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('partners', PartnerController::class);
     });
 });
+
+//Route Google 
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
+
