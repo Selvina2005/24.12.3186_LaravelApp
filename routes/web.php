@@ -26,6 +26,13 @@ Route::get('/login', function () {
 Route::get('/payment/{order_id}', [\App\Http\Controllers\CheckoutController::class, 'payment'])->name('checkout.payment');
 Route::get('/success/{order_id}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
 
+//route rivew UAS
+Route::middleware('auth')->group(function () {
+    Route::post('/review', [ReviewController::class,'store'])
+        ->name('review.store');
+});
+
+
 //Rute Admin Area
 // Grouping untuk URL berawalan /admin
 Route::prefix('admin')->name('admin.')->group(function () {

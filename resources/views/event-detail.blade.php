@@ -24,6 +24,32 @@ use Illuminate\Support\Facades\Storage;
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
         }
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 2.2rem;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-right: 4px;
+        }
+
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: #facc15;
+        }
+
+        .rating input:checked ~ label {
+            color: #facc15;
+        }
     </style>
 </head>
 
@@ -153,6 +179,86 @@ use Illuminate\Support\Facades\Storage;
                     </li>
                 </ul>
             </div>
+            <!--Rivew-->
+            <div class="mt-10 bg-white p-6 rounded-3xl shadow">
+            <h3 class="text-2xl font-bold mb-4">
+                Berikan Rating & Review
+            </h3>
+
+            <form action="{{ route('review.store') }}" method="POST">
+                @csrf
+
+                <input type="hidden"
+                    name="event_id"
+                    value="{{ $event->id }}">
+
+                <div class="mb-4">
+                    <label class="block font-semibold mb-2">
+                        Rating
+                    </label>
+
+                    <div class="rating">
+                        <input type="radio" id="star5" name="rating" value="5">
+                        <label for="star5">★</label>
+
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4">★</label>
+
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3">★</label>
+
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2">★</label>
+
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1">★</label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block font-semibold mb-2">
+                        Review
+                    </label>
+
+                    <textarea
+                        name="review"
+                        rows="4"
+                        class="w-full border rounded-lg p-3"
+                        placeholder="Tulis pengalamanmu mengikuti event ini..."
+                    ></textarea>
+                </div>
+
+                <button
+                    type="submit"
+                    class="bg-indigo-600 text-white px-5 py-2 rounded-lg">
+                    Kirim Review
+                </button>
+            </form>
+            @if($event->reviews->count())
+            <div class="mt-8">
+                <h4 class="font-bold text-xl mb-4">
+                    Review Pengunjung
+                </h4>
+
+                @foreach($event->reviews as $review)
+                    <div class="border rounded-xl p-4 mb-3">
+                        <p class="font-bold">
+                            {{ $review->user->name }}
+                        </p>
+
+                        <p class="text-yellow-500">
+                            {{ str_repeat('★', $review->rating) }}
+                        </p>
+
+                        <p class="text-slate-600 mt-2">
+                            {{ $review->review }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+        </div>
+            
         </div>
     </main>
 
