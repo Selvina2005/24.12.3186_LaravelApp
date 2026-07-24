@@ -6,16 +6,16 @@ use App\Models\Event;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
     public function create(Event $event)
-    {
-        // Mengambil daftar kategori untuk keperluan menu footer
-        $categories = \App\Models\Category::all();
+{
+    $categories = \App\Models\Category::all();
 
-        return view('checkout.create', compact('event', 'categories'));
-    }
+    return view('checkout.create', compact('event', 'categories'));
+}
 
     public function store(Request $request, Event $event)
     {
@@ -39,11 +39,13 @@ class CheckoutController extends Controller
         $transaction = Transaction::create([
             'event_id' => $event->id,
             'order_id' => $orderId,
-            'customer_name' => $request->customer_name,
-            'customer_email' => $request->customer_email,
+
+            'customer_name' => auth()->user()->name,
+            'customer_email' => auth()->user()->email,
             'customer_phone' => $request->customer_phone,
+
             'total_price' => $totalPrice,
-            'status' => 'Pending', // Status Awal
+            'status' => 'Pending',
         ]);
 
         // --- INTEGRASI SNAP MIDTRANS ---

@@ -14,27 +14,32 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {
-        // 1. Akun Admin Utama
-        \App\Models\User::create([
-        'name'      => 'Admin Amikom',
-        'email'     => 'admin@amikom.ac.id',
-        'password'  => bcrypt('password'),
-        'role'      => 'admin',
-    ]);
+{
+    // 1. Akun Admin Utama
+    \App\Models\User::firstOrCreate(
+        ['email' => 'admin@amikom.ac.id'],
+        [
+            'name' => 'Admin Amikom',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+        ]
+    );
 
-        // 2. Insert Kategori Event
-        $category = \App\Models\Category::create([
+    // 2. Insert Kategori Event
+   $category = \App\Models\Category::firstOrCreate(
+    ['slug' => 'seminar-it'],
+    [
         'name' => 'Seminar IT',
-        'slug' => 'seminar-it',
-    ]);
+    ]
+);
 
-        $category2 = \App\Models\Category::firstOrCreate([
+  $category2 = \App\Models\Category::firstOrCreate(
+    ['slug' => 'entertaiment'],
+    [
         'name' => 'Entertaiment',
-        'slug' => 'entertaiment',
-    ]);
-
-        // 3. Insert Sampel Events
+    ]
+);
+     // 3. Insert Sampel Events
         \App\Models\Event::create([
         'category_id' => $category2->id,
         'title' => 'Jazz Night 2025',
@@ -61,20 +66,25 @@ class DatabaseSeeder extends Seeder
 
     //Tugas Praktikum 4 menambahkan kategori
         // Kategori
-        $kategori1 = \App\Models\Category::create([
-            'name' => 'Seminar IT beginner ',
-            'slug' => 'seminar-it bigenner',
-        ]);
+       $kategori1 = \App\Models\Category::firstOrCreate(
+    ['slug' => 'seminar-it-beginner'],
+    [
+        'name' => 'Seminar IT Beginner',
+    ]
+);
 
-        $kategori2 = \App\Models\Category::create([
-            'name' => 'Olahraga',
-            'slug' => 'olahraga',
-        ]);
-
-        $kategori3 = \App\Models\Category::create([
-            'name' => 'Turnamen',
-            'slug' => 'turnamen',
-        ]);
+      $kategori2 = \App\Models\Category::firstOrCreate(
+    ['slug' => 'olahraga'],
+    [
+        'name' => 'Olahraga',
+    ]
+);
+      $kategori3 = \App\Models\Category::firstOrCreate(
+    ['slug' => 'turnamen'],
+    [
+        'name' => 'Turnamen',
+    ]
+);
 
     //menambahkan event
         \App\Models\Event::create([

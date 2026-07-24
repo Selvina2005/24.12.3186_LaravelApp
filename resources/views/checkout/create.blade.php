@@ -96,9 +96,18 @@
         <!-- Form Card -->
         <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
 
-            <h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">
-                📦 Data Pemesan (Tanpa Login)
+            <<h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">
+                📦 Data Pemesan
             </h3>
+
+            <!-- Informasi Login Google -->
+<div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
+    <p class="text-green-700 font-semibold">
+        ✅ Anda telah login menggunakan akun Google.
+        Nama dan email telah diisi otomatis.
+        Silakan lengkapi nomor WhatsApp untuk melanjutkan pembayaran.
+    </p>
+</div>
 
             <form action="{{ route('checkout.store', $event->id) }}"
                 method="POST"
@@ -112,12 +121,11 @@
                     </label>
 
                     <input
-                        type="text"
-                        name="customer_name"
-                        placeholder="Masukkan nama sesuai identitas"
-                        class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                        required
-                        value="{{ old('customer_name') }}">
+                     type="text"
+                     name="customer_name"
+                     value="{{ auth()->user()->name }}"
+                     class="w-full px-5 py-4 bg-gray-100 border-2 border-slate-100 rounded-2xl font-medium"
+                     readonly>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -129,12 +137,11 @@
                         </label>
 
                         <input
-                            type="email"
-                            name="customer_email"
-                            placeholder="contoh@gmail.com"
-                            class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                            required
-                            value="{{ old('customer_email') }}">
+                        type="email"
+                        name="customer_email"
+                        value="{{ auth()->user()->email }}"
+                        class="w-full px-5 py-4 bg-gray-100 border-2 border-slate-100 rounded-2xl font-medium"
+                        readonly>
 
                         <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-tighter">
                             *E-Ticket akan dikirim ke email ini
