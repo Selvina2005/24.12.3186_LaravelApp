@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Review;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -23,14 +23,8 @@ use App\Models\Organization;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -41,7 +35,11 @@ class User extends Authenticatable
 
     public function organization()
     {
-    return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

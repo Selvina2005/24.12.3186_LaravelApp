@@ -30,6 +30,28 @@
         </div>
 
         <div class="mb-4">
+            <label class="block mb-2 font-medium text-gray-700">
+                Penyelenggara
+            </label>
+
+            <select
+                name="partner_id"
+                class="w-full border border-gray-300 p-2.5 rounded focus:ring focus:ring-indigo-200"
+                required
+            >
+                <option value="">
+                    Pilih Penyelenggara
+                </option>
+
+                @foreach($partners as $partner)
+                    <option value="{{ $partner->id }}">
+                        {{ $partner->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-4">
             <label class="block mb-2 font-medium text-gray-700">Kategori Event</label>
             <select name="category_id"
                     class="w-full border border-gray-300 p-2.5 rounded focus:ring focus:ring-indigo-200"

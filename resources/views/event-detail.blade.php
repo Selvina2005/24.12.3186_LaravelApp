@@ -43,16 +43,32 @@ use Illuminate\Support\Facades\Storage;
                         alt="{{ $event->title }}"
                         class="w-full rounded-[2.5rem] shadow-2xl border-8 border-white object-cover aspect-[3/4]">
                     <div class="mt-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
-                    <h4 class="font-bold mb-4">Penyelenggara</h4>
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
-                            AB</div>
-                        <div>
-                            <p class="font-bold text-slate-800">ABP Productions</p>
-                            <p class="text-xs text-slate-500">Verified Organizer</p>
-                        </div>
-                    </div>
+                    <h4 class="font-bold mb-4">
+    Penyelenggara
+</h4>
+
+<div class="flex items-center gap-4">
+
+    <div
+        class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600">
+
+        {{ strtoupper(substr($event->partner->name ?? 'P', 0, 2)) }}
+
+    </div>
+
+    <div>
+
+        <p class="font-bold text-slate-800">
+            {{ $event->partner->name ?? 'Penyelenggara' }}
+        </p>
+
+        <p class="text-xs text-slate-500">
+            Verified Organizer
+        </p>
+
+    </div>
+
+</div>
                 </div>
             </div>
         </div>

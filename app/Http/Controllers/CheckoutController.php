@@ -37,15 +37,17 @@ class CheckoutController extends Controller
 
         // 4. Merekam Transaksi ke Database
         $transaction = Transaction::create([
-            'event_id' => $event->id,
-            'order_id' => $orderId,
+        'user_id' => auth()->id(),
 
-            'customer_name' => auth()->user()->name,
-            'customer_email' => auth()->user()->email,
-            'customer_phone' => $request->customer_phone,
+        'event_id' => $event->id,
+        'order_id' => $orderId,
 
-            'total_price' => $totalPrice,
-            'status' => 'Pending',
+        'customer_name' => auth()->user()->name,
+        'customer_email' => auth()->user()->email,
+        'customer_phone' => $request->customer_phone,
+
+        'total_price' => $totalPrice,
+        'status' => 'Pending',
         ]);
 
         // --- INTEGRASI SNAP MIDTRANS ---

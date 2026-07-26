@@ -224,5 +224,130 @@ use Illuminate\Support\Facades\Storage;
 
     </section>
 
+{{-- REVIEW PENGUNJUNG --}}
+<section class="max-w-7xl mx-auto px-6 pb-20">
+
+    <div class="text-center mb-12">
+
+        <h2 class="text-4xl font-black text-slate-800">
+            Apa Kata Peserta?
+        </h2>
+
+        <p class="text-slate-500 mt-2">
+            Pengalaman nyata dari peserta yang telah mengikuti berbagai event di AmikomEventHub.
+        </p>
+
+    </div>
+
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+
+        @forelse($reviews as $eventId => $eventReviews)
+
+            @php
+                $event = $eventReviews->first()->event;
+
+                $average = $eventReviews->avg('rating');
+
+                $total = $eventReviews->count();
+            @endphp
+
+
+            <div class="bg-white rounded-3xl shadow-lg border border-slate-100 p-6 hover:shadow-xl transition">
+
+
+                {{-- Header --}}
+                <div class="mb-4">
+
+                    <h3 class="font-bold text-xl text-slate-800">
+                        {{ $event->title }}
+                    </h3>
+
+
+                    <p class="text-sm text-indigo-600 font-semibold">
+                        {{ $event->partner->name ?? 'Penyelenggara' }}
+                    </p>
+
+
+                </div>
+
+
+
+                {{-- Rating --}}
+                <div class="flex items-center gap-2 mb-4">
+
+                    <span class="text-yellow-500 font-bold text-lg">
+                        ⭐ {{ number_format($average,1) }}
+                    </span>
+
+
+                    <span class="text-sm text-slate-500">
+                        ({{ $total }} Review)
+                    </span>
+
+                </div>
+
+
+
+                {{-- Tanggal --}}
+                <div class="flex items-center gap-2 text-slate-500 text-sm mb-6">
+
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
+
+
+                    <span>
+                        {{ \Carbon\Carbon::parse($event->date)->format('d M Y H:i') }}
+                    </span>
+
+                </div>
+
+
+
+                {{-- Tombol --}}
+                <a href="{{ route('review.index', $event->id) }}"
+                class="block text-center bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition">
+
+                Detail Review
+
+            </a>
+
+
+            </div>
+
+
+        @empty
+
+
+            <div class="col-span-3 text-center py-20">
+
+                <div class="text-6xl mb-4">
+                    ⭐
+                </div>
+
+
+                <h3 class="text-xl font-bold text-slate-700">
+                    Belum Ada Review
+                </h3>
+
+
+                <p class="text-slate-500 mt-2">
+                    Jadilah peserta pertama yang membagikan pengalamanmu.
+                </p>
+
+
+            </div>
+
+
+        @endforelse
+
+
+    </div>
+
+</section>
 @endsection
 
