@@ -10,13 +10,16 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Organization;
 
 #[Fillable([
+    'organization_id',
     'name',
     'email',
     'password',
     'google_id',
-    'avatar'
+    'avatar',
+    'role'
 ])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -30,15 +33,20 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+{
+    return [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+}
 
-    public function reviews() 
-    {
+public function reviews()
+{
     return $this->hasMany(Review::class);
-    }
+}
+
+public function organization()
+{
+    return $this->belongsTo(Organization::class);
+}
 }

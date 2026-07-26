@@ -12,6 +12,8 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PartnerProfileController;
+use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\Admin\UserController;
 
 //Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -53,20 +55,34 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('partners', PartnerController::class);
     });
+        Route::middleware(['auth','superadmin'])->group(function () {
+        Route::resource('organizations', OrganizationController::class);
+        Route::resource('users', UserController::class);
+
+        Route::patch(
+    '/organizations/{organization}/approve',
+    [OrganizationController::class,'approve']
+)->name('organizations.approve');
+
+Route::patch(
+    '/organizations/{organization}/reject',
+    [OrganizationController::class,'reject']
+)->name('organizations.reject');
+    });
 });
 
 //Route Google 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 
-//route rivew UAS
+//route review UAS
 Route::get('/events/{event}/reviews', [ReviewController::class, 'index'])
     ->name('review.index');
+
 Route::middleware('auth')->group(function () {
     Route::get('/review/{event}', [ReviewController::class,'create'])
         ->name('review.create');
-Route::post('/review', [ReviewController::class,'store'])
+
+    Route::post('/review', [ReviewController::class,'store'])
         ->name('review.store');
-
 });
-

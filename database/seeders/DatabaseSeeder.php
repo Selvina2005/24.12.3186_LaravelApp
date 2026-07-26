@@ -2,151 +2,192 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Category;
+use App\Models\Event;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
-{
-    // 1. Akun Admin Utama
-    \App\Models\User::firstOrCreate(
-        ['email' => 'admin@amikom.ac.id'],
-        [
-            'name' => 'Admin Amikom',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]
-    );
+    {
 
-    // 2. Insert Kategori Event
-   $category = \App\Models\Category::firstOrCreate(
-    ['slug' => 'seminar-it'],
-    [
-        'name' => 'Seminar IT',
-    ]
-);
+        //organization dan users
+        $this->call([
+            OrganizationSeeder::class,
+            UserSeeder::class,
+        ]);
 
-  $category2 = \App\Models\Category::firstOrCreate(
-    ['slug' => 'entertaiment'],
+        //superadmin
+        User::firstOrCreate(
+            ['email' => 'admin@amikom.ac.id'],
+            [
+                'name' => 'Admin Amikom',
+                'password' => bcrypt('password'),
+                'role' => 'superadmin',
+                'organization_id' => null,
+            ]
+        );
+        
+        //categories
+        $seminar = Category::firstOrCreate(
+            ['slug' => 'seminar-it'],
+            ['name' => 'Seminar IT']
+        );
+
+        $entertainment = Category::firstOrCreate(
+            ['slug' => 'entertainment'],
+            ['name' => 'Entertainment']
+        );
+
+        $beginner = Category::firstOrCreate(
+            ['slug' => 'seminar-it-beginner'],
+            ['name' => 'Seminar IT Beginner']
+        );
+
+        $olahraga = Category::firstOrCreate(
+            ['slug' => 'olahraga'],
+            ['name' => 'Olahraga']
+        );
+
+        $turnamen = Category::firstOrCreate(
+            ['slug' => 'turnamen'],
+            ['name' => 'Turnamen']
+        );
+        
+        //events
+       // ==========================
+// EVENT HIMA INFORMATIKA
+// organization_id = 1
+// ==========================
+
+Event::firstOrCreate(
+    ['title' => 'AI Summit 2026'],
     [
-        'name' => 'Entertaiment',
-    ]
-);
-     // 3. Insert Sampel Events
-        \App\Models\Event::create([
-        'category_id' => $category2->id,
-        'title' => 'Jazz Night 2025',
-        'description' => 'Nikmati malam yang indah dengan
-        alunan musik.',
-        'date' => '2026-05-10 19:00:00',
-        'location' => 'Amikom Baru',
+        'organization_id' => 1,
+        'category_id' => $seminar->id,
+        'description' => 'Seminar mengenai perkembangan Artificial Intelligence.',
+        'date' => '2026-09-15 09:00:00',
+        'location' => 'Auditorium Amikom',
         'price' => 50000,
-        'stock' => 100,
+        'stock' => 200,
         'poster_path' => 'posters/event-1.png',
-    ]);
+    ]
+);
 
-        \App\Models\Event::create([
-        'category_id' => $category->id,
-        'title' => 'AI Summit & Expo 2026',
-        'description' => 'Jelajahi tren terkini dalam bidang
-        Artificial Intelligence',
-        'date' => '2026-05-01 13:00:00',
+Event::firstOrCreate(
+    ['title' => 'Laravel Bootcamp'],
+    [
+        'organization_id' => 1,
+        'category_id' => $beginner->id,
+        'description' => 'Pelatihan Laravel untuk mahasiswa.',
+        'date' => '2026-10-05 08:00:00',
+        'location' => 'Lab Komputer 1',
+        'price' => 75000,
+        'stock' => 120,
+        'poster_path' => 'posters/event-2.png',
+    ]
+);
+
+// ==========================
+// EVENT HIMA SISTEM INFORMASI
+// organization_id = 2
+// ==========================
+
+Event::firstOrCreate(
+    ['title' => 'Business Intelligence Seminar'],
+    [
+        'organization_id' => 2,
+        'category_id' => $seminar->id,
+        'description' => 'Belajar Business Intelligence dan Data Analytics.',
+        'date' => '2026-09-20 09:00:00',
         'location' => 'Ruang Cinema',
         'price' => 45000,
         'stock' => 150,
-        'poster_path' => 'posters/event-2.png',
+        'poster_path' => 'posters/event-3.png',
+    ]
+);
+
+Event::firstOrCreate(
+    ['title' => 'UI/UX Design Workshop'],
+    [
+        'organization_id' => 2,
+        'category_id' => $beginner->id,
+        'description' => 'Workshop desain UI/UX menggunakan Figma.',
+        'date' => '2026-10-18 08:00:00',
+        'location' => 'Lab Multimedia',
+        'price' => 60000,
+        'stock' => 100,
+        'poster_path' => 'posters/event-4.png',
+    ]
+);
+
+// ==========================
+// EVENT BEM
+// organization_id = 3
+// ==========================
+
+Event::firstOrCreate(
+    ['title' => 'Amikom Futsal Competition'],
+    [
+        'organization_id' => 3,
+        'category_id' => $olahraga->id,
+        'description' => 'Turnamen futsal antar mahasiswa.',
+        'date' => '2026-11-01 08:00:00',
+        'location' => 'GOR Amikom',
+        'price' => 30000,
+        'stock' => 250,
+        'poster_path' => 'posters/event-5.png',
+    ]
+);
+
+Event::firstOrCreate(
+    ['title' => 'E-Sport Championship'],
+    [
+        'organization_id' => 3,
+        'category_id' => $turnamen->id,
+        'description' => 'Kompetisi Mobile Legends dan Valorant.',
+        'date' => '2026-11-12 09:00:00',
+        'location' => 'Hall Kampus',
+        'price' => 25000,
+        'stock' => 300,
+        'poster_path' => 'posters/event-6.png',
+    ]
+);
+
+// ==========================
+// EVENT UKM MUSIK
+// organization_id = 4
+// ==========================
+
+Event::firstOrCreate(
+    ['title' => 'Amikom Music Festival'],
+    [
+        'organization_id' => 4,
+        'category_id' => $entertainment->id,
+        'description' => 'Festival musik terbesar Amikom.',
+        'date' => '2026-12-05 18:00:00',
+        'location' => 'Lapangan Utama',
+        'price' => 120000,
+        'stock' => 500,
+        'poster_path' => 'posters/event-7.png',
+    ]
+);
+
+Event::firstOrCreate(
+    ['title' => 'Band Competition'],
+    [
+        'organization_id' => 4,
+        'category_id' => $entertainment->id,
+        'description' => 'Kompetisi band antar mahasiswa.',
+        'date' => '2026-12-15 18:30:00',
+        'location' => 'Auditorium Amikom',
+        'price' => 50000,
+        'stock' => 250,
+        'poster_path' => 'posters/event-8.png',
     ]);
-
-    //Tugas Praktikum 4 menambahkan kategori
-        // Kategori
-       $kategori1 = \App\Models\Category::firstOrCreate(
-    ['slug' => 'seminar-it-beginner'],
-    [
-        'name' => 'Seminar IT Beginner',
-    ]
-);
-
-      $kategori2 = \App\Models\Category::firstOrCreate(
-    ['slug' => 'olahraga'],
-    [
-        'name' => 'Olahraga',
-    ]
-);
-      $kategori3 = \App\Models\Category::firstOrCreate(
-    ['slug' => 'turnamen'],
-    [
-        'name' => 'Turnamen',
-    ]
-);
-
-    //menambahkan event
-        \App\Models\Event::create([
-            'category_id' => $category->id,
-            'title' => 'Web Development Bootcamp',
-            'description' => 'Belajar Laravel dari dasar.',
-            'date' => '2026-06-01 09:00:00',
-            'location' => 'Lab Komputer',
-            'price' => 75000,
-            'stock' => 50,
-            'poster_path' => 'asset/concert.png',
-         ]);
-
-         \App\Models\Event::create([
-            'category_id' => $kategori1->id,
-            'title' => 'AI Summit 2026',
-            'description' => 'Seminar AI',
-            'date' => '2026-05-01 10:00:00',
-            'location' => 'Amikom Purwokerto',
-            'price' => 50000,
-            'stock' => 100,
-            'poster_path' => 'asset/concert.png'
-        ]);
-        \App\Models\Event::create([
-            'category_id' => $kategori2->id,
-            'title' => 'Amikom Futsal Competition',
-            'description' => 'Turnamen futsal',
-            'date' => '2026-07-10 08:00:00',
-            'location' => 'Kampus 2 Amikom',
-            'price' => 30000,
-            'stock' => 200,
-            'poster_path' => 'asset/heckathon.png'
-        ]);
-        \App\Models\Event::create([
-            'category_id' => $kategori2->id,
-            'title' => 'Amikom E-Sport Tournament',
-            'description' => 'Turnamen game',
-            'date' => '2026-08-01 10:00:00',
-            'location' => 'Citra 2',
-            'price' => 25000,
-            'stock' => 300,
-            'poster_path' => 'asset/workshop.png'
-        ]);
-        \App\Models\Event::create([
-            'category_id' => $kategori3->id,
-            'title' => ' Amikom Music Festival',
-            'description' => 'Festival musik besar',
-            'date' => '2026-10-01 18:00:00',
-            'location' => 'Kampus 2 Amikom Yogyakarta',
-            'price' => 120000,
-            'stock' => 400,
-            'poster_path' => 'asset/concert.png'
-        ]);
-        \App\Models\Event::create([
-            'category_id' => $kategori3->id,
-            'title' => 'Pemeran Arsitektur',
-            'description' => 'Pameran Arsitektur Amikom',
-            'date' => '2026-10-01 18:00:00',
-            'location' => 'Kampus 2 Amikom Yogyakarta',
-            'price' => 120000,
-            'stock' => 400,
-            'poster_path' => 'asset/concert.png'
-        ]);
-    }
+}
 }

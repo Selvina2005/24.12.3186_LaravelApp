@@ -11,12 +11,25 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    public function index()
-    {
-        $events = Event::with('category')->latest()->paginate(10);
+public function index()
+{
+    if (auth()->user()->role == 'superadmin') {
 
-        return view('admin.events.index', compact('events'));
+        $events = Event::with(['category', 'organization'])
+            ->latest()
+            ->paginate(10);
+
+    } else {
+
+        $events = Event::with(['category', 'organization'])
+            ->where('organization_id', auth()->user()->organization_id)
+            ->latest()
+            ->paginate(10);
     }
+
+    return view('admin.events.index', compact('events'));
+}
+
 
     public function create()
     {
@@ -48,6 +61,7 @@ class EventController extends Controller
                 ->store('posters', 'public');
         }
 
+        $data['organization_id'] = auth()->user()->organization_id;
         Event::create($data);
 
         return redirect()
@@ -60,19 +74,33 @@ class EventController extends Controller
         return view('admin.events.show', compact('event'));
     }
 
-    public function edit(Event $event)
-    {
-        $categories = Category::all();
-        $partners = Partner::all();
-
-        return view(
-            'admin.events.edits',
-            compact('event', 'categories', 'partners')
-        );
+public function edit(Event $event)
+{
+    if (
+        auth()->user()->role != 'superadmin' &&
+        $event->organization_id != auth()->user()->organization_id
+    ) {
+        abort(403);
     }
 
+    $categories = Category::all();
+    $partners = Partner::all();
+
+    return view(
+        'admin.events.edits',
+        compact('event', 'categories', 'partners')
+    );
+}
     public function update(Request $request, Event $event)
     {
+         // Cek apakah organizer berhak mengedit event ini
+    if (
+        auth()->user()->role != 'superadmin' &&
+        $event->organization_id != auth()->user()->organization_id
+    ) {
+        abort(403);
+    }
+    
         $data = $request->validate([
             'partner_id' => 'required|exists:partners,id',
             'category_id' => 'required|exists:categories,id',
@@ -103,15 +131,23 @@ class EventController extends Controller
     }
 
     public function destroy(Event $event)
-    {
-        if ($event->poster_path) {
-            Storage::disk('public')->delete($event->poster_path);
-        }
-
-        $event->delete();
-
-        return redirect()
-            ->route('admin.events.index')
-            ->with('success', 'Data event berhasil dihapus secara permanen.');
+{
+    if (
+        auth()->user()->role != 'superadmin'
+        &&
+        $event->organization_id != auth()->user()->organization_id
+    ) {
+        abort(403);
     }
+
+    if ($event->poster_path) {
+        Storage::disk('public')->delete($event->poster_path);
+    }
+
+    $event->delete();
+
+    return redirect()
+        ->route('admin.events.index')
+        ->with('success', 'Data event berhasil dihapus secara permanen.');
+}
 }
