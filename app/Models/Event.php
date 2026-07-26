@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Models\Category;
 use App\Models\Review;
-use App\Models\Organization;
 use App\Models\Partner;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,8 +14,8 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'organization_id',
         'partner_id',
+        'organization_id',
         'category_id',
         'title',
         'description',
@@ -23,31 +23,27 @@ class Event extends Model
         'location',
         'price',
         'stock',
-        'poster_path'
+        'poster_path',
     ];
 
     protected $casts = [
         'date' => 'datetime',
     ];
 
-
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-
 
     public function organization()
     {
         return $this->belongsTo(Organization::class);
     }
 
-
     public function partner()
     {
         return $this->belongsTo(Partner::class);
     }
-
 
     public function reviews()
     {

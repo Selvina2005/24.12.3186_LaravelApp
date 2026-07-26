@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PartnerProfileController;
 
-
 // ==========================
 // Rute User Area
 // ==========================
@@ -95,25 +94,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', CategoryController::class);
 
         Route::resource('partners', PartnerController::class);
+
     });
 
 
-    Route::middleware(['auth','superadmin'])->group(function () {
+    Route::middleware(['auth', 'superadmin'])->group(function () {
 
         Route::resource('organizations', OrganizationController::class);
 
         Route::resource('users', UserController::class);
 
-
         Route::patch(
             '/organizations/{organization}/approve',
-            [OrganizationController::class,'approve']
+            [OrganizationController::class, 'approve']
         )->name('organizations.approve');
-
 
         Route::patch(
             '/organizations/{organization}/reject',
-            [OrganizationController::class,'reject']
+            [OrganizationController::class, 'reject']
         )->name('organizations.reject');
 
     });
@@ -130,7 +128,6 @@ Route::get('/auth/google', [
     'redirect'
 ])->name('google.login');
 
-
 Route::get('/auth/google/callback', [
     GoogleController::class,
     'callback'
@@ -146,14 +143,12 @@ Route::get('/events/{event}/reviews', [
     'index'
 ])->name('review.index');
 
-
 Route::middleware('auth')->group(function () {
 
     Route::get('/review/{event}', [
         ReviewController::class,
         'create'
     ])->name('review.create');
-
 
     Route::post('/review', [
         ReviewController::class,

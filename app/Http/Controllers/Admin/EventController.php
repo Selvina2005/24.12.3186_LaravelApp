@@ -15,21 +15,27 @@ class EventController extends Controller
     {
         if (auth()->user()->role == 'superadmin') {
 
-            $events = Event::with(['category', 'organization', 'partner'])
-                ->latest()
-                ->paginate(10);
+            $events = Event::with([
+                'category',
+                'organization',
+                'partner'
+            ])->latest()->paginate(10);
 
         } else {
 
-            $events = Event::with(['category', 'organization', 'partner'])
-                ->where('organization_id', auth()->user()->organization_id)
-                ->latest()
-                ->paginate(10);
+            $events = Event::with([
+                'category',
+                'organization',
+                'partner'
+            ])
+            ->where('organization_id', auth()->user()->organization_id)
+            ->latest()
+            ->paginate(10);
+
         }
 
         return view('admin.events.index', compact('events'));
     }
-
 
     public function create()
     {
@@ -42,19 +48,18 @@ class EventController extends Controller
         );
     }
 
-
     public function store(Request $request)
     {
         $data = $request->validate([
-            'partner_id' => 'required|exists:partners,id',
+            'partner_id'  => 'required|exists:partners,id',
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'location' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:1',
-            'poster' => 'nullable|image|max:2048'
+            'date'        => 'required|date',
+            'location'    => 'required|string|max:255',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|numeric|min:1',
+            'poster'      => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('poster')) {
@@ -71,18 +76,15 @@ class EventController extends Controller
             ->with('success', 'Data Event berhasil ditambahkan.');
     }
 
-
     public function show(Event $event)
     {
         return view('admin.events.show', compact('event'));
     }
 
-
     public function edit(Event $event)
     {
         if (
-            auth()->user()->role != 'superadmin'
-            &&
+            auth()->user()->role != 'superadmin' &&
             $event->organization_id != auth()->user()->organization_id
         ) {
             abort(403);
@@ -97,30 +99,26 @@ class EventController extends Controller
         );
     }
 
-
     public function update(Request $request, Event $event)
     {
         if (
-            auth()->user()->role != 'superadmin'
-            &&
+            auth()->user()->role != 'superadmin' &&
             $event->organization_id != auth()->user()->organization_id
         ) {
             abort(403);
         }
 
-
         $data = $request->validate([
-            'partner_id' => 'required|exists:partners,id',
+            'partner_id'  => 'required|exists:partners,id',
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'location' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:1',
-            'poster' => 'nullable|image|max:2048'
+            'date'        => 'required|date',
+            'location'    => 'required|string|max:255',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|numeric|min:1',
+            'poster'      => 'nullable|image|max:2048',
         ]);
-
 
         if ($request->hasFile('poster')) {
 
@@ -132,7 +130,6 @@ class EventController extends Controller
                 ->store('posters', 'public');
         }
 
-
         $event->update($data);
 
         return redirect()
@@ -140,25 +137,20 @@ class EventController extends Controller
             ->with('success', 'Event berhasil diperbarui.');
     }
 
-
     public function destroy(Event $event)
     {
         if (
-            auth()->user()->role != 'superadmin'
-            &&
+            auth()->user()->role != 'superadmin' &&
             $event->organization_id != auth()->user()->organization_id
         ) {
             abort(403);
         }
 
-
         if ($event->poster_path) {
             Storage::disk('public')->delete($event->poster_path);
         }
 
-
         $event->delete();
-
 
         return redirect()
             ->route('admin.events.index')

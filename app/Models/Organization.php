@@ -9,6 +9,7 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'description',
+        'status'
     ];
 
     public function users()

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\Review;
-use Database\Factories\UserFactory;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Organization;
+
 
 #[Fillable([
     'organization_id',
@@ -20,10 +20,16 @@ use App\Models\Organization;
     'avatar',
     'role'
 ])]
-#[Hidden(['password', 'remember_token'])]
+
+#[Hidden([
+    'password',
+    'remember_token'
+])]
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
 
     protected function casts(): array
     {
@@ -33,11 +39,15 @@ class User extends Authenticatable
         ];
     }
 
+
+    // Relasi User dengan Organization
     public function organization()
     {
         return $this->belongsTo(Organization::class);
     }
 
+
+    // Relasi User dengan Review
     public function reviews()
     {
         return $this->hasMany(Review::class);
