@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class IsAdmin
+class SuperAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -14,8 +14,8 @@ class IsAdmin
             return redirect()->route('admin.login');
         }
 
-        if (!in_array(auth()->user()->role, ['superadmin', 'organizer'])) {
-            abort(403, 'Akses ditolak');
+        if (auth()->user()->role != 'superadmin') {
+            abort(403);
         }
 
         return $next($request);

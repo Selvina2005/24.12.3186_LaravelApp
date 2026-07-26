@@ -7,9 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     protected $fillable = [
-    'category_id', 'title', 'description', 'date',
-    'location', 'price', 'stock', 'poster_path'
-    ];
+    'organization_id',
+    'category_id',
+    'title',
+    'description',
+    'date',
+    'location',
+    'price',
+    'stock',
+    'poster_path'
+];
 
     protected $casts = [
     'date' => 'datetime',
@@ -18,6 +25,11 @@ class Event extends Model
   public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function organization()
+    {
+    return $this->belongsTo(Organization::class);
     }
 }
 

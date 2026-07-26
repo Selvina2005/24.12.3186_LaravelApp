@@ -47,6 +47,10 @@ use Illuminate\Support\Facades\Storage;
                     </th>
 
                     <th class="p-4 font-semibold text-gray-600">
+                        Organizer
+                    </th>
+                    
+                    <th class="p-4 font-semibold text-gray-600">
                         Tanggal
                     </th>
 
@@ -89,6 +93,10 @@ use Illuminate\Support\Facades\Storage;
 
                     <td class="p-4 text-indigo-600">
                         {{ $event->category->name ?? '-' }}
+                    </td>
+
+                    <td class="p-4 text-blue-600 font-semibold">
+                        {{ $event->organization->name ?? '-' }}
                     </td>
 
                     <td class="p-4 text-gray-600">

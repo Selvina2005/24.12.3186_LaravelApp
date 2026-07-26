@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\Admin\UserController;
 
 //Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -43,9 +45,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('partners', PartnerController::class);
     });
+        Route::middleware(['auth','superadmin'])->group(function () {
+        Route::resource('organizations', OrganizationController::class);
+        Route::resource('users', UserController::class);
+
+        Route::patch(
+    '/organizations/{organization}/approve',
+    [OrganizationController::class,'approve']
+)->name('organizations.approve');
+
+Route::patch(
+    '/organizations/{organization}/reject',
+    [OrganizationController::class,'reject']
+)->name('organizations.reject');
+    });
 });
 
 //Route Google 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
+
+
+
 

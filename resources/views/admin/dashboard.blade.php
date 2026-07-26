@@ -5,6 +5,24 @@
 
 @section('content')
 
+@section('content')
+
+@if(auth()->user()->role == 'organizer')
+
+<div class="bg-indigo-100 border border-indigo-200 p-5 rounded-2xl mb-6">
+
+       <h2 class="text-2xl font-bold">
+        {{ auth()->user()->organization->name ?? '-' }}
+    </h2>
+
+    <p class="text-slate-600">
+        Dashboard Organizer
+    </p>
+
+</div>
+
+@endif
+
 <!-- Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap6 mb-10">
 
@@ -94,12 +112,232 @@
 
 </div>
 
+@if(auth()->user()->role == 'superadmin')
+
+<div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 mb-10">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Data Organisasi
+    </h2>
+
+    <table class="w-full border">
+
+        <thead class="bg-slate-100">
+
+            <tr>
+
+                <th class="border p-3">
+                    Nama Organisasi
+                </th>
+
+                <th class="border p-3">
+                    Jumlah Event
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @forelse($organizations as $organization)
+
+            <tr>
+
+                <td class="border p-3">
+
+                    {{ $organization->name }}
+
+                </td>
+
+                <td class="border p-3">
+
+                    {{ $organization->events->count() }}
+
+                </td>
+
+            </tr>
+
+            @empty
+
+            <tr>
+
+                <td colspan="2" class="p-5 text-center">
+
+                    Belum ada organisasi
+
+                </td>
+
+            </tr>
+
+            @endforelse
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@endif
+
+@if(auth()->user()->role == 'superadmin')
+
+<div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 mb-10">
+
+<h2 class="text-2xl font-bold mb-6">
+
+Semua Event
+
+</h2>
+
+<table class="w-full border">
+
+<thead class="bg-slate-100">
+
+<tr>
+
+<th class="border p-3">
+
+Event
+
+</th>
+
+<th class="border p-3">
+
+Organizer
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+@forelse($events as $event)
+
+<tr>
+
+<td class="border p-3">
+
+{{ $event->title }}
+
+</td>
+
+<td class="border p-3">
+
+{{ $event->organization->name ?? '-' }}
+
+</td>
+
+</tr>
+
+@empty
+
+<tr>
+
+<td colspan="2" class="text-center p-5">
+
+Belum ada event
+
+</td>
+
+</tr>
+
+@endforelse
+
+</tbody>
+
+</table>
+
+</div>
+@endif
+
 <!-- Latest Sales Table -->
 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
 
     <div class="p-8 border-b flex justify-between itemscenter">
         <h3 class="font-black text-xl">Transaksi Terakhir</h3>
 
+        @if(auth()->user()->role == 'superadmin')
+
+<div class="mt-10 bg-white rounded-3xl border border-slate-100 shadow-sm p-8">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Daftar Organisasi
+    </h2>
+
+    <table class="w-full">
+
+        <thead>
+            <tr class="border-b">
+                <th class="text-left py-3">Organisasi</th>
+                <th class="text-left py-3">Jumlah Event</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach($organizations as $organization)
+
+            <tr class="border-b">
+
+                <td class="py-3">
+                    {{ $organization->name }}
+                </td>
+
+                <td class="py-3">
+                    {{ $organization->events_count }}
+                </td>
+
+            </tr>
+
+            @endforeach
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@endif
+
+@if(auth()->user()->role == 'superadmin')
+
+<div class="mt-10 bg-white rounded-3xl border border-slate-100 shadow-sm p-8">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Semua Event
+    </h2>
+
+    <table class="w-full">
+
+        <thead>
+            <tr class="border-b">
+                <th class="text-left py-3">Event</th>
+                <th class="text-left py-3">Organizer</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach($events as $event)
+
+            <tr class="border-b">
+
+                <td class="py-3">
+                    {{ $event->title }}
+                </td>
+
+                <td class="py-3">
+                    {{ $event->organization->name ?? '-' }}
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+@endif
         <a href="{{ route('admin.transactions.index') }}"
             class="text-indigo-600 font-bold hover:underline">
             Lihat Semua

@@ -81,20 +81,65 @@
                 Laporan Transaksi
             </a>
 
-            <!-- Kategori -->
-            <a href="{{ url('/admin/categories') }}"
-                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-800 rounded-xl transition">
+           <!-- Kategori -->
+<a href="{{ url('/admin/categories') }}"
+    class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-800 rounded-xl transition">
 
-                <svg class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16">
-                    </path>
-                </svg>
+    <svg class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16">
+        </path>
+    </svg>
 
-                Kategori
-            </a>
+    Kategori
+</a>
 
-        </nav>
+{{-- Hanya Super Admin --}}
+@if(auth()->user()->role == 'superadmin')
+
+<a href="{{ route('admin.organizations.index') }}"
+    class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-800 rounded-xl transition">
+
+    <svg class="w-5 h-5 text-indigo-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 7h18M3 12h18M3 17h18">
+        </path>
+
+    </svg>
+
+    Organization
+</a>
+
+<a href="{{ route('admin.users.index') }}"
+    class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-800 rounded-xl transition">
+
+    <svg class="w-5 h-5 text-indigo-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 20h5V4H2v16h5m10 0v-2a4 4 0 00-8 0v2m8 0H9m4-8a4 4 0 100-8 4 4 0 000 8z">
+        </path>
+
+    </svg>
+
+    User Organizer
+</a>
+
+@endif
+
+</nav>
 
         <!-- Logout -->
         <div class="pt-6 border-t border-indigo-800">
