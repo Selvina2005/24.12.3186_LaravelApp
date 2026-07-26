@@ -24,32 +24,6 @@ use Illuminate\Support\Facades\Storage;
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
         }
-        .rating {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-        }
-
-        .rating input {
-            display: none;
-        }
-
-        .rating label {
-            font-size: 2.2rem;
-            color: #d1d5db;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-right: 4px;
-        }
-
-        .rating label:hover,
-        .rating label:hover ~ label {
-            color: #facc15;
-        }
-
-        .rating input:checked ~ label {
-            color: #facc15;
-        }
     </style>
 </head>
 
@@ -69,16 +43,32 @@ use Illuminate\Support\Facades\Storage;
                         alt="{{ $event->title }}"
                         class="w-full rounded-[2.5rem] shadow-2xl border-8 border-white object-cover aspect-[3/4]">
                     <div class="mt-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
-                    <h4 class="font-bold mb-4">Penyelenggara</h4>
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
-                            AB</div>
-                        <div>
-                            <p class="font-bold text-slate-800">ABP Productions</p>
-                            <p class="text-xs text-slate-500">Verified Organizer</p>
-                        </div>
-                    </div>
+                    <h4 class="font-bold mb-4">
+    Penyelenggara
+</h4>
+
+<div class="flex items-center gap-4">
+
+    <div
+        class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600">
+
+        {{ strtoupper(substr($event->partner->name ?? 'P', 0, 2)) }}
+
+    </div>
+
+    <div>
+
+        <p class="font-bold text-slate-800">
+            {{ $event->partner->name ?? 'Penyelenggara' }}
+        </p>
+
+        <p class="text-xs text-slate-500">
+            Verified Organizer
+        </p>
+
+    </div>
+
+</div>
                 </div>
             </div>
         </div>
@@ -179,86 +169,6 @@ use Illuminate\Support\Facades\Storage;
                     </li>
                 </ul>
             </div>
-            <!--Rivew-->
-            <div class="mt-10 bg-white p-6 rounded-3xl shadow">
-            <h3 class="text-2xl font-bold mb-4">
-                Berikan Rating & Review
-            </h3>
-
-            <form action="{{ route('review.store') }}" method="POST">
-                @csrf
-
-                <input type="hidden"
-                    name="event_id"
-                    value="{{ $event->id }}">
-
-                <div class="mb-4">
-                    <label class="block font-semibold mb-2">
-                        Rating
-                    </label>
-
-                    <div class="rating">
-                        <input type="radio" id="star5" name="rating" value="5">
-                        <label for="star5">★</label>
-
-                        <input type="radio" id="star4" name="rating" value="4">
-                        <label for="star4">★</label>
-
-                        <input type="radio" id="star3" name="rating" value="3">
-                        <label for="star3">★</label>
-
-                        <input type="radio" id="star2" name="rating" value="2">
-                        <label for="star2">★</label>
-
-                        <input type="radio" id="star1" name="rating" value="1">
-                        <label for="star1">★</label>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="block font-semibold mb-2">
-                        Review
-                    </label>
-
-                    <textarea
-                        name="review"
-                        rows="4"
-                        class="w-full border rounded-lg p-3"
-                        placeholder="Tulis pengalamanmu mengikuti event ini..."
-                    ></textarea>
-                </div>
-
-                <button
-                    type="submit"
-                    class="bg-indigo-600 text-white px-5 py-2 rounded-lg">
-                    Kirim Review
-                </button>
-            </form>
-            @if($event->reviews->count())
-            <div class="mt-8">
-                <h4 class="font-bold text-xl mb-4">
-                    Review Pengunjung
-                </h4>
-
-                @foreach($event->reviews as $review)
-                    <div class="border rounded-xl p-4 mb-3">
-                        <p class="font-bold">
-                            {{ $review->user->name }}
-                        </p>
-
-                        <p class="text-yellow-500">
-                            {{ str_repeat('★', $review->rating) }}
-                        </p>
-
-                        <p class="text-slate-600 mt-2">
-                            {{ $review->review }}
-                        </p>
-                    </div>
-                @endforeach
-            </div>
-        @endif
-        </div>
-            
         </div>
     </main>
 

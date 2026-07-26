@@ -10,23 +10,28 @@ use Laravel\Socialite\Facades\Socialite;
 class GoogleController extends Controller
 {
     public function redirect(Request $request)
-{
-    if ($request->has('event')) {
+    {
+        if ($request->has('event')) {
 
-        session([
-            'checkout_event' => $request->event
-        ]);
+            session([
+                'checkout_event' => $request->event
+            ]);
 
+        }
+
+        return Socialite::driver('google')->redirect();
     }
 
-    return Socialite::driver('google')->redirect();
-}
 
     public function callback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        $googleUser = Socialite::driver('google')
+            ->stateless()
+            ->user();
+
 
         $user = User::where('email', $googleUser->email)->first();
+
 
         if (!$user) {
 
@@ -47,18 +52,23 @@ class GoogleController extends Controller
 
         }
 
-       Auth::login($user);
 
-if(session()->has('checkout_event')){
+        Auth::login($user);
 
-    $event = session('checkout_event');
 
-    session()->forget('checkout_event');
+        // Jika user login karena checkout tiket
+        if (session()->has('checkout_event')) {
 
-    return redirect()->route('checkout.create',$event);
+            $event = session('checkout_event');
 
-}
+            session()->forget('checkout_event');
 
-return redirect()->route('home');
+            return redirect()->route('checkout.create', $event);
+
+        }
+
+
+        // Jika user login untuk melihat tiket / review
+        return redirect()->route('ticket');
     }
 }

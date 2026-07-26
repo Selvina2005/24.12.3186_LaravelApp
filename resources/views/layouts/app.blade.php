@@ -37,6 +37,11 @@
         Kategori
     </a>
 
+   <a href="{{ route('ticket') }}"
+    class="hover:text-indigo-600 transition">
+        Tiket Saya
+    </a>
+
     <a href="#" class="hover:text-indigo-600 transition">
         Tentang Kami
     </a>

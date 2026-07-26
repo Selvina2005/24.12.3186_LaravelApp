@@ -28,6 +28,7 @@
             <label class="block mb-2 font-medium text-gray-700">
                 Judul Event
             </label>
+            
             <input type="text"
                    name="title"
                    value="{{ old('title', $event->title) }}"
@@ -35,6 +36,26 @@
                    required>
         </div>
 
+        <div class="mb-4">
+    <label class="block mb-2 font-medium text-gray-700">
+        Penyelenggara
+    </label>
+
+    <select
+        name="partner_id"
+        class="w-full border border-gray-300 p-2.5 rounded"
+        required
+    >
+        @foreach($partners as $partner)
+            <option
+                value="{{ $partner->id }}"
+                {{ $event->partner_id == $partner->id ? 'selected' : '' }}
+            >
+                {{ $partner->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
         <div class="mb-4">
             <label class="block mb-2 font-medium text-gray-700">
                 Kategori Event
