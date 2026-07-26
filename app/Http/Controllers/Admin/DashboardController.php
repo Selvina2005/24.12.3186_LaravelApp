@@ -6,18 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Transaction;
 use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Jika Super Admin
         if (Auth::user()->role == 'superadmin') {
             return $this->superAdminDashboard();
         }
 
-        // Jika Organizer
         return $this->organizerDashboard();
     }
 
@@ -78,6 +77,16 @@ class DashboardController extends Controller
 
         $transactions = Transaction::all();
 
+        // Statistik
+        $totalUsers = User::count();
+        $totalEvents = Event::count();
+        $totalTransactions = Transaction::count();
+        $totalOrganizations = Organization::count();
+
+        // Grafik
+        $eventPerOrganization = Organization::withCount('events')->get();
+
+        // Data Dashboard Lama
         $totalRevenue = Transaction::whereIn('status', ['success', 'settlement'])
             ->sum('total_price');
 
@@ -103,7 +112,12 @@ class DashboardController extends Controller
             'ticketsSold',
             'activeEvents',
             'pendingOrders',
-            'recentTransactions'
+            'recentTransactions',
+            'totalUsers',
+            'totalEvents',
+            'totalTransactions',
+            'totalOrganizations',
+            'eventPerOrganization'
         ));
     }
 }

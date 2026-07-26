@@ -5,8 +5,6 @@
 
 @section('content')
 
-@section('content')
-
 @if(auth()->user()->role == 'organizer')
 
 <div class="bg-indigo-100 border border-indigo-200 p-5 rounded-2xl mb-6">
@@ -24,9 +22,9 @@
 @endif
 
 <!-- Stats Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap6 mb-10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
-    <div class="bg-white p-6 rounded-3xl border border-slate100 shadow-sm">
+    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
         <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -47,7 +45,7 @@
         </h3>
     </div>
 
-    <div class="bg-white p-6 rounded-3xl border border-slate100 shadow-sm">
+    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
         <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -68,7 +66,7 @@
         </h3>
     </div>
 
-    <div class="bg-white p-6 rounded-3xl border border-slate100 shadow-sm">
+    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
         <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -89,8 +87,8 @@
         </h3>
     </div>
 
-    <div class="bg-white p-6 rounded-3xl border border-slate100 shadow-sm">
-        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded2xl flex items-center justify-center mb-4">
+    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                     stroke-linecap="round"
@@ -115,7 +113,7 @@
 @if(auth()->user()->role == 'superadmin')
 
 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 mb-10">
-
+    
     <h2 class="text-2xl font-bold mb-6">
         Data Organisasi
     </h2>
@@ -174,170 +172,23 @@
 
         </tbody>
 
-    </table>
-
-</div>
-
-@endif
-
-@if(auth()->user()->role == 'superadmin')
-
-<div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 mb-10">
-
-<h2 class="text-2xl font-bold mb-6">
-
-Semua Event
-
-</h2>
-
-<table class="w-full border">
-
-<thead class="bg-slate-100">
-
-<tr>
-
-<th class="border p-3">
-
-Event
-
-</th>
-
-<th class="border p-3">
-
-Organizer
-
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-@forelse($events as $event)
-
-<tr>
-
-<td class="border p-3">
-
-{{ $event->title }}
-
-</td>
-
-<td class="border p-3">
-
-{{ $event->organization->name ?? '-' }}
-
-</td>
-
-</tr>
-
-@empty
-
-<tr>
-
-<td colspan="2" class="text-center p-5">
-
-Belum ada event
-
-</td>
-
-</tr>
-
-@endforelse
-
-</tbody>
-
 </table>
 
+<div class="mt-8">
+    <canvas id="eventChart"></canvas>
 </div>
+
+</div>
+
 @endif
 
 <!-- Latest Sales Table -->
 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
 
-    <div class="p-8 border-b flex justify-between itemscenter">
+    <div class="p-8 border-b flex justify-between items-center">
         <h3 class="font-black text-xl">Transaksi Terakhir</h3>
 
-        @if(auth()->user()->role == 'superadmin')
-
-<div class="mt-10 bg-white rounded-3xl border border-slate-100 shadow-sm p-8">
-
-    <h2 class="text-2xl font-bold mb-6">
-        Daftar Organisasi
-    </h2>
-
-    <table class="w-full">
-
-        <thead>
-            <tr class="border-b">
-                <th class="text-left py-3">Organisasi</th>
-                <th class="text-left py-3">Jumlah Event</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            @foreach($organizations as $organization)
-
-            <tr class="border-b">
-
-                <td class="py-3">
-                    {{ $organization->name }}
-                </td>
-
-                <td class="py-3">
-                    {{ $organization->events_count }}
-                </td>
-
-            </tr>
-
-            @endforeach
-
-        </tbody>
-
-    </table>
-
-</div>
-
-@endif
-
-@if(auth()->user()->role == 'superadmin')
-
-<div class="mt-10 bg-white rounded-3xl border border-slate-100 shadow-sm p-8">
-
-    <h2 class="text-2xl font-bold mb-6">
-        Semua Event
-    </h2>
-
-    <table class="w-full">
-
-        <thead>
-            <tr class="border-b">
-                <th class="text-left py-3">Event</th>
-                <th class="text-left py-3">Organizer</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            @foreach($events as $event)
-
-            <tr class="border-b">
-
-                <td class="py-3">
-                    {{ $event->title }}
-                </td>
-
-                <td class="py-3">
-                    {{ $event->organization->name ?? '-' }}
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-@endif
+        
         <a href="{{ route('admin.transactions.index') }}"
             class="text-indigo-600 font-bold hover:underline">
             Lihat Semua
@@ -372,7 +223,7 @@ Belum ada event
                         </td>
 
                         <td class="px-8 py-6">
-                            <p class="font-bold uppercase trackingwide text-sm truncate max-w-[150px]">
+                            <p class="font-bold uppercase tracking-wide text-sm truncate max-w-[150px]">
                                 {{ $trx->customer_name }}
                             </p>
 
@@ -381,7 +232,7 @@ Belum ada event
                             </p>
                         </td>
 
-                        <td class="px-8 py-6 font-medium textslate-600 max-w-xs truncate">
+                        <td class="px-8 py-6 font-medium text-slate-600 max-w-xs truncate">
                             {{ $trx->event->title ?? '-' }}
                         </td>
 
@@ -395,7 +246,7 @@ Belum ada event
 
                             @elseif($trx->status === 'pending')
 
-                                <span class="px-3 py-1 bg-orange100 text-orange-700 rounded-lg text-xs font-bold uppercase">
+                                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold uppercase">
                                     Pending
                                 </span>
 
@@ -409,7 +260,7 @@ Belum ada event
 
                         </td>
 
-                        <td class="px-8 py-6 font-black textindigo-600 whitespace-nowrap text-right">
+                        <td class="px-8 py-6 font-black text-indigo-600 whitespace-nowrap text-right">
                             Rp {{ number_format($trx->total_price, 0, ',', '.') }}
                         </td>
 
@@ -418,7 +269,7 @@ Belum ada event
                 @empty
 
                     <tr>
-                        <td colspan="5" class="px-8 py-10 textcenter text-slate-500">
+                        <td colspan="5" class="px-8 py-10 text-center text-slate-500">
                             Belum ada transaksi
                         </td>
                     </tr>
@@ -432,4 +283,52 @@ Belum ada event
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@if(auth()->user()->role == 'superadmin')
+
+<script>
+
+const ctx = document.getElementById('eventChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+
+        labels: [
+            @foreach($eventPerOrganization as $org)
+                "{{ $org->name }}",
+            @endforeach
+        ],
+
+        datasets: [{
+            label: 'Jumlah Event',
+            data: [
+                @foreach($eventPerOrganization as $org)
+                    {{ $org->events_count }},
+                @endforeach
+            ],
+            borderWidth: 1
+        }]
+    },
+
+    options: {
+        responsive: true,
+
+        plugins:{
+            legend:{
+                display:false
+            }
+        },
+
+        scales:{
+            y:{
+                beginAtZero:true
+            }
+        }
+    }
+});
+
+</script>
+
+@endif
 @endsection
