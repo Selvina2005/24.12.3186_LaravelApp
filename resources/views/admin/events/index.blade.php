@@ -103,8 +103,22 @@ use Illuminate\Support\Facades\Storage;
                         {{ \Carbon\Carbon::parse($event->date)->format('d M Y, H:i') }}
                     </td>
 
-                    <td class="p-4 text-green-600 font-semibold">
-                        Rp {{ number_format($event->price, 0, ',', '.') }}
+                    <td class="p-4 font-semibold">
+
+                        @if($event->price == 0)
+
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                                GRATIS
+                            </span>
+
+                        @else
+
+                            <span class="text-green-600">
+                                Rp {{ number_format($event->price, 0, ',', '.') }}
+                            </span>
+
+                        @endif
+
                     </td>
 
                     <td class="p-4 font-semibold">

@@ -132,11 +132,17 @@ use Illuminate\Support\Facades\Storage;
                         </p>
                     </div>
                     <div>
-                        <a href="{{ route('google.login', ['event' => $event->id]) }}"
+                    <a href="{{ route('google.login', ['event' => $event->id]) }}"
                         class="inline-block px-10 py-5 bg-white text-indigo-600 rounded-2xl font-black text-xl hover:scale-105 transition-transform shadow-xl">
-                        Pesan Sekarang
-                        </a>
-                    </div>
+
+                        @if($event->price == 0)
+                            Klaim Tiket Gratis
+                        @else
+                            Pesan Sekarang
+                        @endif
+
+                    </a>
+                </div>
                 </div>
                 <!-- Decoration -->
                 <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-white opacity-10 rounded-full"></div>

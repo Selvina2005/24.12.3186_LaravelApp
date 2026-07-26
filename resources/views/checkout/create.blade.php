@@ -64,12 +64,20 @@
                     </p>
 
                     <p class="text-indigo-600 font-bold mt-2">
-                        1 x Rp {{ number_format($event->price, 0, ',', '.') }}
+                        @if($event->price == 0)
+                            GRATIS
+                        @else
+                            1 x Rp {{ number_format($event->price, 0, ',', '.') }}
+                        @endif
                     </p>
                 </div>
 
             </div>
 
+            @php
+                $serviceFee = $event->price == 0 ? 0 : 5000;
+                $totalPrice = $event->price + $serviceFee;
+            @endphp
             <div class="mt-8 pt-6 border-t space-y-3">
 
                 <div class="flex justify-between text-slate-500">
@@ -79,13 +87,13 @@
 
                 <div class="flex justify-between text-slate-500">
                     <span>Biaya Layanan</span>
-                    <span>Rp 5.000</span>
+                    <span>Rp {{ number_format($serviceFee,0,',','.') }}</span>
                 </div>
 
                 <div class="flex justify-between text-2xl font-black mt-4 pt-4 border-t">
                     <span>Total Bayar</span>
                     <span class="text-indigo-600">
-                        Rp {{ number_format($event->price + 5000, 0, ',', '.') }}
+                        Rp {{ number_format($totalPrice, 0, ',', '.') }}
                     </span>
                 </div>
 
@@ -96,7 +104,7 @@
         <!-- Form Card -->
         <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
 
-            <<h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">
+            <h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">
                 📦 Data Pemesan
             </h3>
 
@@ -167,11 +175,19 @@
 
                 </div>
 
+                @if($event->price == 0)
                 <button
                     type="submit"
-                    class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all">
+                    class="w-full py-5 bg-green-600 text-white rounded-2xl font-black text-xl">
+                    🎟️ Dapatkan Tiket Gratis
+                </button>
+                @else
+                <button
+                    type="submit"
+                    class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-xl">
                     Lanjut Pembayaran
                 </button>
+                @endif
 
                 <p class="text-center text-xs text-slate-400">
                     Dengan menekan tombol di atas, Anda menyetujui Syarat & Ketentuan kami.

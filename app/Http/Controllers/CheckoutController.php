@@ -17,26 +17,31 @@ class CheckoutController extends Controller
     return view('checkout.create', compact('event', 'categories'));
 }
 
-    public function store(Request $request, Event $event)
-    {
-        // 1. Validasi Input Kredensial Pelanggan
-        $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email|max:255',
-            'customer_phone' => 'required|string|max:20',
-        ]);
+   public function store(Request $request, Event $event)
+{
+    // 1. Validasi Input Kredensial Pelanggan
+    $request->validate([
+        'customer_name' => 'required|string|max:255',
+        'customer_email' => 'required|email|max:255',
+        'customer_phone' => 'required|string|max:20',
+    ]);
 
-        // 2. Cegah Check-out Jika Tiket Habis
-        if ($event->stock <= 0) {
-            return back()->with('error', 'Mohon maaf, tiket untuk acara ini sudah habis.');
-        }
+    // 2. Cegah Check-out Jika Tiket Habis
+    if ($event->stock <= 0) {
+        return back()->with('error', 'Mohon maaf, tiket untuk acara ini sudah habis.');
+    }
 
-        // 3. Generate Kode TRX (Unik)
-        $orderId = 'TRX-' . time() . '-' . Str::random(5);
-        $totalPrice = $event->price + 5000; // Menambahkan biaya admin (dummy);
+    // 3. Generate Kode TRX (Unik)
+    $orderId = 'TRX-' . time() . '-' . Str::random(5);
+    if ($event->price == 0) {
+    $totalPrice = 0;
+    } else {
+        $totalPrice = $event->price + 5000;
+    }
+    // Biaya admin untuk event berbayar
 
-        // 4. Merekam Transaksi ke Database
-        $transaction = Transaction::create([
+    // 4. Merekam Transaksi ke Database
+    $transaction = Transaction::create([
         'user_id' => auth()->id(),
 
         'event_id' => $event->id,
@@ -48,49 +53,73 @@ class CheckoutController extends Controller
 
         'total_price' => $totalPrice,
         'status' => 'Pending',
+    ]);
+
+    // ===================================================
+    // FREE EVENT (Harga Rp0)
+    // Tidak menggunakan Midtrans
+    // ===================================================
+    if ($event->price == 0) {
+
+        $transaction->update([
+            'status' => 'success',
+            'total_price' => 0,
         ]);
 
-        // --- INTEGRASI SNAP MIDTRANS ---
+        // Kurangi stok tiket
+        $event->decrement('stock');
 
-        // Konfigurasi Kredensial Environment Midtrans
-        \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        \Midtrans\Config::$isProduction = false; // Mode Sandbox
-        \Midtrans\Config::$isSanitized = true;
-        \Midtrans\Config::$is3ds = true;
-
-        // Susun Paket Array Data Transaksi
-        $params = [
-            'transaction_details' => [
-                'order_id' => $orderId,
-                'gross_amount' => $totalPrice,
-            ],
-            'customer_details' => [
-                'first_name' => $request->customer_name,
-                'email' => $request->customer_email,
-                'phone' => $request->customer_phone,
-            ],
-        ];
-
-        try {
-
-            // Perintah Tembak Generate Snap Token
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
-
-            // Update rekaman kita bahwa transaksi terkait sudah memiliki id token pelunasan
-            $transaction->update(['snap_token' => $snapToken]);
-
-            // Redirect ke halaman antarmuka pembayaran final pelanggan
-            return redirect()->route('checkout.payment', $transaction->order_id);
-
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal memproses pembayaran jaringan: ' . $e->getMessage());
-        }
-
-        // 5. Arahkan ke rute dummy halaman sukses sementara
-
-        // (Akan kita ubah di Pertemuan selanjutnya menuju Midtrans)
-
+        // Langsung ke halaman sukses
+        return redirect()->route('checkout.success', $transaction->order_id);
     }
+
+    // ===================================================
+    // EVENT BERBAYAR (MIDTRANS)
+    // ===================================================
+
+    // Konfigurasi Kredensial Environment Midtrans
+    \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+    \Midtrans\Config::$isProduction = false;
+    \Midtrans\Config::$isSanitized = true;
+    \Midtrans\Config::$is3ds = true;
+
+    // Susun Paket Array Data Transaksi
+    $params = [
+        'transaction_details' => [
+            'order_id' => $orderId,
+            'gross_amount' => $totalPrice,
+        ],
+        'customer_details' => [
+            'first_name' => $request->customer_name,
+            'email' => $request->customer_email,
+            'phone' => $request->customer_phone,
+        ],
+    ];
+
+    try {
+
+        // Generate Snap Token
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+        // Simpan Snap Token
+        $transaction->update([
+            'snap_token' => $snapToken
+        ]);
+
+        // Redirect ke halaman pembayaran
+        return redirect()->route(
+            'checkout.payment',
+            $transaction->order_id
+        );
+
+    } catch (\Exception $e) {
+
+        return back()->with(
+            'error',
+            'Gagal memproses pembayaran jaringan: ' . $e->getMessage()
+        );
+    }
+}
 
     public function payment($order_id)
     {
@@ -116,6 +145,22 @@ class CheckoutController extends Controller
     $transaction = Transaction::with('event')
         ->where('order_id', $order_id)
         ->firstOrFail();
+
+    // ===================================================
+    // EVENT GRATIS
+    // Tidak perlu cek Midtrans
+    // ===================================================
+    if ($transaction->total_price == 0) {
+
+        return view(
+            'checkout.success',
+            compact('transaction', 'categories')
+        );
+    }
+
+    // ===================================================
+    // EVENT BERBAYAR (MIDTRANS)
+    // ===================================================
 
     // Konfigurasi Midtrans untuk mengecek status transaksi langsung ke API
     \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
