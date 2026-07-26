@@ -7,7 +7,7 @@
 
 @if(auth()->user()->role == 'organizer')
 
-<<div class="bg-indigo-100 border border-indigo-200 p-5 rounded-2xl mb-6">
+<div class="bg-indigo-100 border border-indigo-200 p-5 rounded-2xl mb-6">
 
     <h2 class="text-2xl font-bold">
         {{ auth()->user()->organization->name ?? '-' }}
@@ -20,11 +20,8 @@
 </div>
 
 @endif
-
-
 <!-- Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-
 
     <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
 
@@ -50,23 +47,20 @@
         </h3>
 
     </div>
+<div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
 
+    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4">
 
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
+            </path>
+        </svg>
 
-    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-
-        <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4">
-
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
-                </path>
-            </svg>
-
-        </div>
+    </div>
 
         <p class="text-slate-400 text-sm font-bold uppercase mb-1">
             Tiket Terjual
@@ -77,13 +71,9 @@
         </h3>
 
     </div>
-
-
-
     <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
 
         <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4">
-
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                     stroke-linecap="round"
@@ -104,13 +94,9 @@
         </h3>
 
     </div>
-
-
-
     <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
 
         <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-4">
-
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                     stroke-linecap="round"
@@ -132,9 +118,7 @@
 
     </div>
 
-
-</div>
-
+    
     <!-- table transaksi -->
 </div>
  <div class="overflow-x-auto">
@@ -225,7 +209,7 @@
 @if(auth()->user()->role == 'superadmin')
 
 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 mb-10">
-
+    
     <h2 class="text-2xl font-bold mb-6">
         Data Organisasi
     </h2>
@@ -284,178 +268,62 @@
 
         </tbody>
 
-    </table>
-
-</div>
-
-@endif
-
-@if(auth()->user()->role == 'superadmin')
-
-<div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 mb-10">
-
-<h2 class="text-2xl font-bold mb-6">
-
-Semua Event
-
-</h2>
-
-<table class="w-full border">
-
-<thead class="bg-slate-100">
-
-<tr>
-
-<th class="border p-3">
-
-Event
-
-</th>
-
-<th class="border p-3">
-
-Organizer
-
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-@forelse($events as $event)
-
-<tr>
-
-<td class="border p-3">
-
-{{ $event->title }}
-
-</td>
-
-<td class="border p-3">
-
-{{ $event->organization->name ?? '-' }}
-
-</td>
-
-</tr>
-
-@empty
-
-<tr>
-
-<td colspan="2" class="text-center p-5">
-
-Belum ada event
-
-</td>
-
-</tr>
-
-@endforelse
-
-</tbody>
-
 </table>
 
+<div class="mt-8">
+    <canvas id="eventChart"></canvas>
 </div>
-@endif
-
-<!-- Latest Sales Table -->
-<div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-
-    <div class="p-8 border-b flex justify-between itemscenter">
-        <h3 class="font-black text-xl">Transaksi Terakhir</h3>
-
-        @if(auth()->user()->role == 'superadmin')
-
-<div class="mt-10 bg-white rounded-3xl border border-slate-100 shadow-sm p-8">
-
-    <h2 class="text-2xl font-bold mb-6">
-        Daftar Organisasi
-    </h2>
-
-    <table class="w-full">
-
-        <thead>
-            <tr class="border-b">
-                <th class="text-left py-3">Organisasi</th>
-                <th class="text-left py-3">Jumlah Event</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            @foreach($organizations as $organization)
-
-            <tr class="border-b">
-
-                <td class="py-3">
-                    {{ $organization->name }}
-                </td>
-
-                <td class="py-3">
-                    {{ $organization->events_count }}
-                </td>
-
-            </tr>
-
-            @endforeach
-
-        </tbody>
-
-    </table>
 
 </div>
 
 @endif
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @if(auth()->user()->role == 'superadmin')
 
-<div class="mt-10 bg-white rounded-3xl border border-slate-100 shadow-sm p-8">
+<script>
 
-    <h2 class="text-2xl font-bold mb-6">
-        Semua Event
-    </h2>
+const ctx = document.getElementById('eventChart');
 
-    <table class="w-full">
+new Chart(ctx, {
+    type: 'bar',
+    data: {
 
-        <thead>
-            <tr class="border-b">
-                <th class="text-left py-3">Event</th>
-                <th class="text-left py-3">Organizer</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            @foreach($events as $event)
-
-            <tr class="border-b">
-
-                <td class="py-3">
-                    {{ $event->title }}
-                </td>
-
-                <td class="py-3">
-                    {{ $event->organization->name ?? '-' }}
-                </td>
-            </tr>
+        labels: [
+            @foreach($eventPerOrganization as $org)
+                "{{ $org->name }}",
             @endforeach
-        </tbody>
-    </table>
-</div>
+        ],
+
+        datasets: [{
+            label: 'Jumlah Event',
+            data: [
+                @foreach($eventPerOrganization as $org)
+                    {{ $org->events_count }},
+                @endforeach
+            ],
+            borderWidth: 1
+        }]
+    },
+
+    options: {
+        responsive: true,
+
+        plugins:{
+            legend:{
+                display:false
+            }
+        },
+
+        scales:{
+            y:{
+                beginAtZero:true
+            }
+        }
+    }
+});
+
+</script>
+
 @endif
-        <a href="{{ route('admin.transactions.index') }}"
-            class="text-indigo-600 font-bold hover:underline">
-            Lihat Semua
-        </a>
-    </div>
-
-   
-
-</div>
-
 @endsection
