@@ -90,6 +90,7 @@ class ReviewController extends Controller
     {
 
         $event->load([
+            'organization',
             'partner'
         ]);
 
@@ -101,12 +102,12 @@ class ReviewController extends Controller
 
 
         return view(
-        'review.index',
-        compact(
-            'event',
-            'reviews'
-        )
-    );
+            'review.index',
+            compact(
+                'event',
+                'reviews'
+            )
+        );
 
     }
 

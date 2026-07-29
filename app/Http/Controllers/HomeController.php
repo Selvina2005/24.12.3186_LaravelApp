@@ -35,14 +35,14 @@ class HomeController extends Controller
         // Partner
         $partners = Partner::all();
 
-        // Review
         $reviews = Review::with([
             'user',
+            'event.organization',
             'event.partner'
         ])
         ->latest()
         ->get()
-        ->groupBy('event_id');
+        ->groupBy('event_id');  
 
         return view(
             'welcome',

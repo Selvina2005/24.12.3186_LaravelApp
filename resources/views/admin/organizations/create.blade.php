@@ -2,47 +2,89 @@
 
 @section('content')
 
-<div class="p-6">
+<!-- Google Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<h2 class="text-2xl font-bold mb-6">
-Tambah Organization
-</h2>
+<div class="p-6 md:p-10 max-w-4xl mx-auto font-['Inter',sans-serif] text-slate-800 antialiased">
 
-<form
-action="{{ route('admin.organizations.store') }}"
-method="POST">
+    <!-- HEADER SECTION -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+                Tambah Organization
+            </h2>
+            <p class="text-sm text-slate-500 mt-1">
+                Isi formulir di bawah untuk menambahkan organisasi penyelenggara event baru.
+            </p>
+        </div>
 
-@csrf
+        <!-- BUTTON KEMBALI -->
+        <a href="{{ route('admin.organizations.index') }}" 
+           class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 px-4 py-2.5 rounded-xl transition duration-150 self-start md:self-auto">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Kembali
+        </a>
+    </div>
 
-<div class="mb-4">
+    <!-- MAIN FORM CONTAINER -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/80 p-6 md:p-8">
 
-<label>Nama Organization</label>
+        <form action="{{ route('admin.organizations.store') }}" method="POST" class="space-y-6">
 
-<input
-type="text"
-name="name"
-class="border rounded w-full p-3">
+            @csrf
 
-</div>
+            <!-- NAMA ORGANIZATION -->
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                    Nama Organization <span class="text-rose-500">*</span>
+                </label>
 
-<div class="mb-4">
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Masukkan nama organisasi baru..."
+                    class="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition duration-150"
+                    required>
+            </div>
 
-<label>Deskripsi</label>
+            <!-- DESKRIPSI -->
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                    Deskripsi
+                </label>
 
-<textarea
-name="description"
-class="border rounded w-full p-3"></textarea>
+                <textarea
+                    name="description"
+                    rows="4"
+                    placeholder="Tuliskan deskripsi atau informasi singkat mengenai organisasi ini..."
+                    class="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition duration-150 resize-y"></textarea>
+            </div>
 
-</div>
+            <!-- ACTION BUTTONS -->
+            <div class="flex items-center justify-end gap-3 border-t border-slate-100 pt-6 mt-8">
 
-<button
-class="bg-indigo-600 text-white px-5 py-2 rounded">
+                <a href="{{ route('admin.organizations.index') }}"
+                   class="px-5 py-2.5 rounded-xl font-semibold text-xs text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 transition duration-150">
+                    Batal
+                </a>
 
-Simpan
+                <button
+                    type="submit"
+                    class="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white px-7 py-2.5 rounded-xl font-semibold text-xs shadow-md shadow-indigo-100 hover:shadow-lg transition duration-150">
 
-</button>
+                    Simpan
 
-</form>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 

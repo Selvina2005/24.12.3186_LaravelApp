@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\Organization;
+use App\Models\Partner;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -106,24 +109,35 @@ class EventController extends Controller
     }
 
     public function create()
-    {
-    $categories = Category::all();
-    $partners = Partner::all();
-
-    return view(
-        'admin.events.create',
-        compact('categories', 'partners')
-    );
-    }
-   
-    public function edit(Event $event)
 {
     $categories = Category::all();
     $partners = Partner::all();
+    $organizations = Organization::all();
+
+    return view(
+        'admin.events.create',
+        compact(
+            'categories',
+            'partners',
+            'organizations'
+        )
+    );
+}
+   
+   public function edit(Event $event)
+{
+    $categories = Category::all();
+    $partners = Partner::all();
+    $organizations = Organization::all();
 
     return view(
         'admin.events.edits',
-        compact('event', 'categories', 'partners')
+        compact(
+            'event',
+            'categories',
+            'partners',
+            'organizations'
+        )
     );
 }
 }

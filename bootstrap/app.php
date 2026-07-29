@@ -19,8 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'superadmin' => \App\Http\Middleware\SuperAdmin::class,
         ]);
 
+        // Redirect user yang belum login ke Google Login
         $middleware->redirectGuestsTo(function (Request $request) {
-            return route('admin.login');
+            return route('login');
         });
 
         $middleware->validateCsrfTokens(except: [

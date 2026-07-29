@@ -6,175 +6,194 @@ use Illuminate\Support\Facades\Storage;
 
 @section('content')
 
-<div class="p-6">
+<div class="p-6 md:p-8 max-w-7xl mx-auto">
 
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold">
-            Manajemen Event
-        </h2>
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
+                Manajemen Event
+            </h2>
+            <p class="text-xs md:text-sm text-slate-400 mt-1">
+                Kelola daftar acara, poster, stok tiket, dan informasi organizer.
+            </p>
+        </div>
 
         <a
             href="{{ route('admin.events.create') }}"
-            class="bg-indigo-600 text-white px-4 py-2 rounded font-semibold hover:bg-indigo-700"
+            class="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm hover:bg-indigo-700 hover:shadow transition-all duration-200"
         >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
             Tambah Event
         </a>
     </div>
 
+    <!-- Alert Success -->
     @if(session('success'))
-        <div class="bg-green-100 text-green-700 p-4 rounded mb-5 border border-green-200">
-            {{ session('success') }}
+        <div class="flex items-center gap-3 bg-emerald-50 text-emerald-700 p-4 rounded-2xl mb-6 border border-emerald-200/80 shadow-sm text-sm font-medium">
+            <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>{{ session('success') }}</span>
         </div>
     @endif
 
-    <div class="overflow-x-auto">
+    <!-- Table Container -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
 
-        <table class="w-full bg-white rounded-lg shadow-sm border border-gray-200 text-left">
+            <table class="w-full text-left border-collapse">
 
-            <thead>
-                <tr class="bg-gray-50 border-b border-gray-200">
+                <thead>
+                    <tr class="bg-slate-50/80 text-slate-400 uppercase text-[10px] font-black tracking-widest border-b border-slate-100">
 
-                    <th class="p-4 font-semibold text-gray-600">
-                        Poster
-                    </th>
+                        <th class="p-4 md:px-6 md:py-4">
+                            Poster
+                        </th>
 
-                    <th class="p-4 font-semibold text-gray-600">
-                        Judul Event
-                    </th>
+                        <th class="p-4 md:px-6 md:py-4">
+                            Judul Event
+                        </th>
 
-                    <th class="p-4 font-semibold text-gray-600">
-                        Kategori
-                    </th>
+                        <th class="p-4 md:px-6 md:py-4">
+                            Kategori
+                        </th>
 
-                    <th class="p-4 font-semibold text-gray-600">
-                        Organizer
-                    </th>
-                    
-                    <th class="p-4 font-semibold text-gray-600">
-                        Tanggal
-                    </th>
+                        <th class="p-4 md:px-6 md:py-4">
+                            Organizer
+                        </th>
+                        
+                        <th class="p-4 md:px-6 md:py-4">
+                            Tanggal
+                        </th>
 
-                    <th class="p-4 font-semibold text-gray-600">
-                        Harga
-                    </th>
+                        <th class="p-4 md:px-6 md:py-4">
+                            Harga
+                        </th>
 
-                    <th class="p-4 font-semibold text-gray-600">
-                        Stok
-                    </th>
+                        <th class="p-4 md:px-6 md:py-4 text-center">
+                            Stok
+                        </th>
 
-                    <th class="p-4 font-semibold text-gray-600">
-                        Aksi Pilihan
-                    </th>
+                        <th class="p-4 md:px-6 md:py-4 text-right">
+                            Aksi Pilihan
+                        </th>
 
-                </tr>
-            </thead>
+                    </tr>
+                </thead>
 
-            <tbody>
+                <tbody class="divide-y divide-slate-100 text-sm">
 
-                @foreach($events as $event)
+                    @foreach($events as $event)
 
-                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <tr class="hover:bg-slate-50/80 transition duration-150">
 
-                    <td class="p-4">
+                        <td class="p-4 md:px-6 md:py-4">
 
-                        <img
-                            src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
-                                ? asset('storage/' . $event->poster_path)
-                                : 'https://placehold.co/160x200' }}"
-                            class="w-16 h-20 rounded-xl object-cover shadow-sm"
-                            alt="{{ $event->title }}"
-                        >
-
-                    </td>
-
-                    <td class="p-4 text-gray-800">
-                        {{ $event->title }}
-                    </td>
-
-                    <td class="p-4 text-indigo-600">
-                        {{ $event->category->name ?? '-' }}
-                    </td>
-
-                    <td class="p-4 text-blue-600 font-semibold">
-                        {{ $event->organization->name ?? '-' }}
-                    </td>
-
-                    <td class="p-4 text-gray-600">
-                        {{ \Carbon\Carbon::parse($event->date)->format('d M Y, H:i') }}
-                    </td>
-
-                    <td class="p-4 font-semibold">
-
-                        @if($event->price == 0)
-
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                                GRATIS
-                            </span>
-
-                        @else
-
-                            <span class="text-green-600">
-                                Rp {{ number_format($event->price, 0, ',', '.') }}
-                            </span>
-
-                        @endif
-
-                    </td>
-
-                    <td class="p-4 font-semibold">
-
-                        @if($event->stock > 10)
-                            <span class="text-green-600">
-                                {{ $event->stock }}
-                            </span>
-                        @else
-                            <span class="text-red-600">
-                                {{ $event->stock }}
-                            </span>
-                        @endif
-
-                    </td>
-
-                    <td class="p-4">
-
-                        <div class="flex gap-2">
-
-                            <a
-                                href="{{ route('admin.events.edit', $event->id) }}"
-                                class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1.5 rounded text-sm font-semibold hover:bg-blue-600 hover:text-white transition"
+                            <img
+                                src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
+                                    ? asset('storage/' . $event->poster_path)
+                                    : 'https://placehold.co/160x200' }}"
+                                class="w-16 h-20 rounded-none object-cover shadow-sm border border-slate-200"
+                                alt="{{ $event->title }}"
                             >
-                                Edit Data
-                            </a>
 
-                            <form
-                                action="{{ route('admin.events.destroy', $event->id) }}"
-                                method="POST"
-                                onsubmit="return confirm('Anda yakin ingin menghapus data acara ini secara permanen?');"
-                            >
-                                @csrf
-                                @method('DELETE')
+                        </td>
 
-                                <button
-                                    type="submit"
-                                    class="bg-red-100 text-red-600 border border-red-200 px-3 py-1.5 rounded text-sm font-semibold hover:bg-red-600 hover:text-white transition"
+                        <td class="p-4 md:px-6 md:py-4 font-bold text-slate-800 max-w-xs leading-snug">
+                            {{ $event->title }}
+                        </td>
+
+                        <td class="p-4 md:px-6 md:py-4">
+                            <span class="inline-flex items-center px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-semibold">
+                                {{ $event->category->name ?? '-' }}
+                            </span>
+                        </td>
+
+                        <td class="p-4 md:px-6 md:py-4 text-slate-600 font-semibold">
+                            {{ $event->organization->name ?? '-' }}
+                        </td>
+
+                        <td class="p-4 md:px-6 md:py-4 text-slate-500 whitespace-nowrap text-xs font-medium">
+                            {{ \Carbon\Carbon::parse($event->date)->format('d M Y, H:i') }}
+                        </td>
+
+                        <td class="p-4 md:px-6 md:py-4 font-bold whitespace-nowrap">
+
+                            @if($event->price == 0)
+
+                                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-extrabold tracking-wider uppercase">
+                                    GRATIS
+                                </span>
+
+                            @else
+
+                                <span class="text-slate-800 font-extrabold">
+                                    Rp {{ number_format($event->price, 0, ',', '.') }}
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                        <td class="p-4 md:px-6 md:py-4 text-center font-bold">
+
+                            @if($event->stock > 10)
+                                <span class="inline-flex items-center justify-center min-w-[2.5rem] px-2 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/60 rounded-full text-xs font-extrabold">
+                                    {{ $event->stock }}
+                                </span>
+                            @else
+                                <span class="inline-flex items-center justify-center min-w-[2.5rem] px-2 py-1 bg-rose-50 text-rose-600 border border-rose-200/60 rounded-full text-xs font-extrabold">
+                                    {{ $event->stock }}
+                                </span>
+                            @endif
+
+                        </td>
+
+                        <td class="p-4 md:px-6 md:py-4 text-right">
+
+                            <div class="flex items-center justify-end gap-2">
+
+                                <a
+                                    href="{{ route('admin.events.edit', $event->id) }}"
+                                    class="bg-sky-50 text-sky-600 border border-sky-200/80 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-sky-600 hover:text-white transition-all duration-150"
                                 >
-                                    Hapus
-                                </button>
+                                    Edit
+                                </a>
 
-                            </form>
+                                <form
+                                    action="{{ route('admin.events.destroy', $event->id) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Anda yakin ingin menghapus data acara ini secara permanen?');"
+                                    class="inline-block"
+                                >
+                                    @csrf
+                                    @method('DELETE')
 
-                        </div>
+                                    <button
+                                        type="submit"
+                                        class="bg-rose-50 text-rose-600 border border-rose-200/80 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-600 hover:text-white transition-all duration-150"
+                                    >
+                                        Hapus
+                                    </button>
 
-                    </td>
+                                </form>
 
-                </tr>
+                            </div>
 
-                @endforeach
+                        </td>
 
-            </tbody>
+                    </tr>
 
-        </table>
+                    @endforeach
 
+                </tbody>
+
+            </table>
+
+        </div>
     </div>
 
 </div>
